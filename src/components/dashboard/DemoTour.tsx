@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { ArrowUpRight, X, Sparkles, BarChart3, Bell, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, X, Wand2, BarChart3, Bell, ShieldCheck } from "lucide-react";
 import { markTourSeen, type Role, ROLE_META } from "@/lib/auth";
 
-type Step = { icon: typeof Sparkles; tag: string; t: string; d: string };
+type Step = { icon: typeof Wand2; tag: string; t: string; d: string };
 
 const COMMON: Step[] = [
-  { icon: Sparkles, tag: "WELCOME", t: "Your HR cockpit", d: "Everything you need — assistant, documents, insights — in one mobile-first workspace." },
+  { icon: Wand2, tag: "WELCOME", t: "Your HR cockpit", d: "Everything you need — assistant, documents, insights — in one mobile-first workspace." },
   { icon: BarChart3, tag: "LIVE DATA", t: "Charts that breathe", d: "Engagement, workload and risk signals refresh as your people activity flows in." },
   { icon: Bell, tag: "ALERTS", t: "Never miss a signal", d: "Open the bell to see what needs your attention — sorted by urgency." },
   { icon: ShieldCheck, tag: "PRIVACY", t: "Built on validated data", d: "Answers come from your validated policies. Sensitive items escalate to humans." },

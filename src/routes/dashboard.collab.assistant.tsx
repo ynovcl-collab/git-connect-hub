@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/Bits";
-import { Send, Sparkles, Loader2 } from "lucide-react";
+import { Send, Wand2, Loader2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -89,7 +89,7 @@ function Assistant() {
         <div className="flex flex-wrap gap-2 my-3">
           {SUGGESTIONS.map((s) => (
             <button key={s} onClick={() => send(s)} disabled={isLoading} className="text-xs px-3 py-1.5 rounded-full bg-secondary hover:bg-accent hover:text-white transition disabled:opacity-50">
-              <Sparkles className="w-3 h-3 inline mr-1" />{s}
+              <Wand2 className="w-3 h-3 inline mr-1" />{s}
             </button>
           ))}
         </div>

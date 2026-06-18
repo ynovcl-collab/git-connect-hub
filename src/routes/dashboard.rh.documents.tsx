@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { PageHeader, Panel, Stat } from "@/components/dashboard/Bits";
 import { Modal, Toast } from "@/components/Modal";
-import { FileText, Plus, Download, Loader2, BookOpen, Trash2, Sparkles } from "lucide-react";
+import { FileText, Plus, Download, Loader2, BookOpen, Trash2, Wand2 } from "lucide-react";
 import { createDocument, listAllDocuments } from "@/lib/documents.functions";
 import { openPrintablePdf } from "@/lib/pdf";
 import { supabase } from "@/integrations/supabase/client";
@@ -189,7 +189,7 @@ function EnterpriseDocsPanel({ onToast }: { onToast: (m: string) => void }) {
         }
       >
         <div className="flex items-start gap-2 mb-3 p-3 rounded-xl bg-secondary/60 border border-border">
-          <Sparkles className="w-4 h-4 text-accent mt-0.5" />
+          <Wand2 className="w-4 h-4 text-accent mt-0.5" />
           <div className="text-[11px] text-muted-foreground leading-relaxed">
             Documents added here are retrieved by the AI assistant to ground its answers — paste policy text, procedure summaries, FAQ entries, employee handbook chapters. Every answer using a doc is cited.
           </div>

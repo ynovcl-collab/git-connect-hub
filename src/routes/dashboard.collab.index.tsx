@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Panel, Stat, AreaChart } from "@/components/dashboard/Bits";
 import { ExecutiveHero } from "@/components/dashboard/ExecutiveHero";
 import { TiltCard, Reveal, Parallax, GlowRing } from "@/components/dashboard/Wow";
-import { MessageSquare, FileText, Compass, ArrowUpRight, Calendar, CheckCircle2, Sparkles, Heart, Clock } from "lucide-react";
+import { MessageSquare, FileText, Compass, ArrowUpRight, Calendar, CheckCircle2, Wand2, Heart, Clock } from "lucide-react";
 import { MoodPulse } from "@/components/dashboard/MoodPulse";
 
 export const Route = createFileRoute("/dashboard/collab/")({
@@ -33,7 +33,7 @@ function CollabHome() {
       <div className="grid grid-cols-2 gap-2" style={{ perspective: 1200 }}>
         {[
           { l: "Leave balance", v: "12d", d: "+2 vs Q3", i: Calendar, a: false },
-          { l: "Onboarding", v: "73%", d: undefined, i: Sparkles, a: true },
+          { l: "Onboarding", v: "73%", d: undefined, i: Wand2, a: true },
           { l: "Open requests", v: "1", d: "processing", i: FileText, a: false },
           { l: "Wellbeing", v: "Good", d: "↑ 8 pts", i: Heart, a: false },
         ].map((s, idx) => (
