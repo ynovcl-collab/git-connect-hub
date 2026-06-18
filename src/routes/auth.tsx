@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowUpRight, Mail, Lock, ShieldCheck, Compass, Sparkles, HeartHandshake } from "lucide-react";
+import { ArrowUpRight, Mail, Lock, ShieldCheck, Compass, Sparkles, HeartHandshake, Stethoscope } from "lucide-react";
 import { ROLE_META, signIn, DEMO_ACCOUNTS, type Role } from "@/lib/auth";
 import { Logo } from "@/components/Logo";
 
