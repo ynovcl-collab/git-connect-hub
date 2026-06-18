@@ -60,7 +60,7 @@ function RHDocs() {
   return (
     <div className="space-y-5">
       <PageHeader kicker="Documents" title="Generation queue" subtitle="AI-assisted creation, validation and dispatch of every HR document."
-        action={<button onClick={()=>setOpen(true)} className="pill-btn accent !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase"><Plus className="w-3.5 h-3.5"/> New document</button>} />
+        right={<button onClick={()=>setOpen(true)} className="pill-btn accent !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase"><Plus className="w-3.5 h-3.5"/> New document</button>} />
 
       <div className="grid grid-cols-3 gap-2">
         <Stat label="Total" value={String(docs.length)} accent />
