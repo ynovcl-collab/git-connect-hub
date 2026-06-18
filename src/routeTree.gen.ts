@@ -28,6 +28,7 @@ import { Route as DashboardRhPeopleRouteImport } from './routes/dashboard.rh.peo
 import { Route as DashboardRhMedicalRouteImport } from './routes/dashboard.rh.medical'
 import { Route as DashboardRhKnowledgeRouteImport } from './routes/dashboard.rh.knowledge'
 import { Route as DashboardRhDocumentsRouteImport } from './routes/dashboard.rh.documents'
+import { Route as DashboardMedecinRequestsRouteImport } from './routes/dashboard.medecin.requests'
 import { Route as DashboardMedecinRecordsRouteImport } from './routes/dashboard.medecin.records'
 import { Route as DashboardMedecinProfileRouteImport } from './routes/dashboard.medecin.profile'
 import { Route as DashboardMedecinAssistantRouteImport } from './routes/dashboard.medecin.assistant'
@@ -41,6 +42,7 @@ import { Route as DashboardCollabProfileRouteImport } from './routes/dashboard.c
 import { Route as DashboardCollabPresenceRouteImport } from './routes/dashboard.collab.presence'
 import { Route as DashboardCollabOnboardingRouteImport } from './routes/dashboard.collab.onboarding'
 import { Route as DashboardCollabOffboardingRouteImport } from './routes/dashboard.collab.offboarding'
+import { Route as DashboardCollabMedicalRouteImport } from './routes/dashboard.collab.medical'
 import { Route as DashboardCollabLeaveRouteImport } from './routes/dashboard.collab.leave'
 import { Route as DashboardCollabDocumentsRouteImport } from './routes/dashboard.collab.documents'
 import { Route as DashboardCollabAssistantRouteImport } from './routes/dashboard.collab.assistant'
@@ -145,6 +147,12 @@ const DashboardRhDocumentsRoute = DashboardRhDocumentsRouteImport.update({
   path: '/documents',
   getParentRoute: () => DashboardRhRoute,
 } as any)
+const DashboardMedecinRequestsRoute =
+  DashboardMedecinRequestsRouteImport.update({
+    id: '/requests',
+    path: '/requests',
+    getParentRoute: () => DashboardMedecinRoute,
+  } as any)
 const DashboardMedecinRecordsRoute = DashboardMedecinRecordsRouteImport.update({
   id: '/records',
   path: '/records',
@@ -214,6 +222,11 @@ const DashboardCollabOffboardingRoute =
     path: '/offboarding',
     getParentRoute: () => DashboardCollabRoute,
   } as any)
+const DashboardCollabMedicalRoute = DashboardCollabMedicalRouteImport.update({
+  id: '/medical',
+  path: '/medical',
+  getParentRoute: () => DashboardCollabRoute,
+} as any)
 const DashboardCollabLeaveRoute = DashboardCollabLeaveRouteImport.update({
   id: '/leave',
   path: '/leave',
@@ -274,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/collab/assistant': typeof DashboardCollabAssistantRoute
   '/dashboard/collab/documents': typeof DashboardCollabDocumentsRoute
   '/dashboard/collab/leave': typeof DashboardCollabLeaveRoute
+  '/dashboard/collab/medical': typeof DashboardCollabMedicalRoute
   '/dashboard/collab/offboarding': typeof DashboardCollabOffboardingRoute
   '/dashboard/collab/onboarding': typeof DashboardCollabOnboardingRoute
   '/dashboard/collab/presence': typeof DashboardCollabPresenceRoute
@@ -287,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
   '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
+  '/dashboard/medecin/requests': typeof DashboardMedecinRequestsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -311,6 +326,7 @@ export interface FileRoutesByTo {
   '/dashboard/collab/assistant': typeof DashboardCollabAssistantRoute
   '/dashboard/collab/documents': typeof DashboardCollabDocumentsRoute
   '/dashboard/collab/leave': typeof DashboardCollabLeaveRoute
+  '/dashboard/collab/medical': typeof DashboardCollabMedicalRoute
   '/dashboard/collab/offboarding': typeof DashboardCollabOffboardingRoute
   '/dashboard/collab/onboarding': typeof DashboardCollabOnboardingRoute
   '/dashboard/collab/presence': typeof DashboardCollabPresenceRoute
@@ -324,6 +340,7 @@ export interface FileRoutesByTo {
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
   '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
+  '/dashboard/medecin/requests': typeof DashboardMedecinRequestsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -354,6 +371,7 @@ export interface FileRoutesById {
   '/dashboard/collab/assistant': typeof DashboardCollabAssistantRoute
   '/dashboard/collab/documents': typeof DashboardCollabDocumentsRoute
   '/dashboard/collab/leave': typeof DashboardCollabLeaveRoute
+  '/dashboard/collab/medical': typeof DashboardCollabMedicalRoute
   '/dashboard/collab/offboarding': typeof DashboardCollabOffboardingRoute
   '/dashboard/collab/onboarding': typeof DashboardCollabOnboardingRoute
   '/dashboard/collab/presence': typeof DashboardCollabPresenceRoute
@@ -367,6 +385,7 @@ export interface FileRoutesById {
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
   '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
+  '/dashboard/medecin/requests': typeof DashboardMedecinRequestsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -398,6 +417,7 @@ export interface FileRouteTypes {
     | '/dashboard/collab/assistant'
     | '/dashboard/collab/documents'
     | '/dashboard/collab/leave'
+    | '/dashboard/collab/medical'
     | '/dashboard/collab/offboarding'
     | '/dashboard/collab/onboarding'
     | '/dashboard/collab/presence'
@@ -411,6 +431,7 @@ export interface FileRouteTypes {
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
     | '/dashboard/medecin/records'
+    | '/dashboard/medecin/requests'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -435,6 +456,7 @@ export interface FileRouteTypes {
     | '/dashboard/collab/assistant'
     | '/dashboard/collab/documents'
     | '/dashboard/collab/leave'
+    | '/dashboard/collab/medical'
     | '/dashboard/collab/offboarding'
     | '/dashboard/collab/onboarding'
     | '/dashboard/collab/presence'
@@ -448,6 +470,7 @@ export interface FileRouteTypes {
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
     | '/dashboard/medecin/records'
+    | '/dashboard/medecin/requests'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -477,6 +500,7 @@ export interface FileRouteTypes {
     | '/dashboard/collab/assistant'
     | '/dashboard/collab/documents'
     | '/dashboard/collab/leave'
+    | '/dashboard/collab/medical'
     | '/dashboard/collab/offboarding'
     | '/dashboard/collab/onboarding'
     | '/dashboard/collab/presence'
@@ -490,6 +514,7 @@ export interface FileRouteTypes {
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
     | '/dashboard/medecin/records'
+    | '/dashboard/medecin/requests'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -650,6 +675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRhDocumentsRouteImport
       parentRoute: typeof DashboardRhRoute
     }
+    '/dashboard/medecin/requests': {
+      id: '/dashboard/medecin/requests'
+      path: '/requests'
+      fullPath: '/dashboard/medecin/requests'
+      preLoaderRoute: typeof DashboardMedecinRequestsRouteImport
+      parentRoute: typeof DashboardMedecinRoute
+    }
     '/dashboard/medecin/records': {
       id: '/dashboard/medecin/records'
       path: '/records'
@@ -741,6 +773,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCollabOffboardingRouteImport
       parentRoute: typeof DashboardCollabRoute
     }
+    '/dashboard/collab/medical': {
+      id: '/dashboard/collab/medical'
+      path: '/medical'
+      fullPath: '/dashboard/collab/medical'
+      preLoaderRoute: typeof DashboardCollabMedicalRouteImport
+      parentRoute: typeof DashboardCollabRoute
+    }
     '/dashboard/collab/leave': {
       id: '/dashboard/collab/leave'
       path: '/leave'
@@ -824,6 +863,7 @@ interface DashboardCollabRouteChildren {
   DashboardCollabAssistantRoute: typeof DashboardCollabAssistantRoute
   DashboardCollabDocumentsRoute: typeof DashboardCollabDocumentsRoute
   DashboardCollabLeaveRoute: typeof DashboardCollabLeaveRoute
+  DashboardCollabMedicalRoute: typeof DashboardCollabMedicalRoute
   DashboardCollabOffboardingRoute: typeof DashboardCollabOffboardingRoute
   DashboardCollabOnboardingRoute: typeof DashboardCollabOnboardingRoute
   DashboardCollabPresenceRoute: typeof DashboardCollabPresenceRoute
@@ -835,6 +875,7 @@ const DashboardCollabRouteChildren: DashboardCollabRouteChildren = {
   DashboardCollabAssistantRoute: DashboardCollabAssistantRoute,
   DashboardCollabDocumentsRoute: DashboardCollabDocumentsRoute,
   DashboardCollabLeaveRoute: DashboardCollabLeaveRoute,
+  DashboardCollabMedicalRoute: DashboardCollabMedicalRoute,
   DashboardCollabOffboardingRoute: DashboardCollabOffboardingRoute,
   DashboardCollabOnboardingRoute: DashboardCollabOnboardingRoute,
   DashboardCollabPresenceRoute: DashboardCollabPresenceRoute,
@@ -873,6 +914,7 @@ interface DashboardMedecinRouteChildren {
   DashboardMedecinAssistantRoute: typeof DashboardMedecinAssistantRoute
   DashboardMedecinProfileRoute: typeof DashboardMedecinProfileRoute
   DashboardMedecinRecordsRoute: typeof DashboardMedecinRecordsRoute
+  DashboardMedecinRequestsRoute: typeof DashboardMedecinRequestsRoute
   DashboardMedecinIndexRoute: typeof DashboardMedecinIndexRoute
 }
 
@@ -880,6 +922,7 @@ const DashboardMedecinRouteChildren: DashboardMedecinRouteChildren = {
   DashboardMedecinAssistantRoute: DashboardMedecinAssistantRoute,
   DashboardMedecinProfileRoute: DashboardMedecinProfileRoute,
   DashboardMedecinRecordsRoute: DashboardMedecinRecordsRoute,
+  DashboardMedecinRequestsRoute: DashboardMedecinRequestsRoute,
   DashboardMedecinIndexRoute: DashboardMedecinIndexRoute,
 }
 

@@ -56,7 +56,7 @@ export const updateMedicalRequest = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const { data: isMedic } = await supabase.rpc("has_role", { _user_id: userId, _role: "medecin" });
     if (!isMedic) throw new Error("Forbidden");
-    const patch: Record<string, unknown> = {};
+    const patch: { status?: "pending" | "scheduled" | "done" | "cancelled"; scheduled_at?: string | null; doctor_notes?: string } = {};
     if (data.status) patch.status = data.status;
     if (data.scheduled_at !== undefined) patch.scheduled_at = data.scheduled_at;
     if (data.doctor_notes !== undefined) patch.doctor_notes = data.doctor_notes;
