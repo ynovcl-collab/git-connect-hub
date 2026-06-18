@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.touch_medical_requests() FROM PUBLIC, authenticated, anon;
