@@ -76,7 +76,7 @@ function refusalMessage(kind: string): string {
 
 type ChatRequestBody = {
   messages?: unknown;
-  role?: "collab" | "manager" | "rh" | "admin";
+  role?: "collab" | "manager" | "rh" | "admin" | "medecin";
 };
 
 export const Route = createFileRoute("/api/chat")({
