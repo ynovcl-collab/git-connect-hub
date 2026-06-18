@@ -28,6 +28,7 @@ import { Route as DashboardRhPeopleRouteImport } from './routes/dashboard.rh.peo
 import { Route as DashboardRhMedicalRouteImport } from './routes/dashboard.rh.medical'
 import { Route as DashboardRhKnowledgeRouteImport } from './routes/dashboard.rh.knowledge'
 import { Route as DashboardRhDocumentsRouteImport } from './routes/dashboard.rh.documents'
+import { Route as DashboardMedecinRecordsRouteImport } from './routes/dashboard.medecin.records'
 import { Route as DashboardManagerTeamRouteImport } from './routes/dashboard.manager.team'
 import { Route as DashboardManagerQvtRouteImport } from './routes/dashboard.manager.qvt'
 import { Route as DashboardManagerProfileRouteImport } from './routes/dashboard.manager.profile'
@@ -141,6 +142,11 @@ const DashboardRhDocumentsRoute = DashboardRhDocumentsRouteImport.update({
   id: '/documents',
   path: '/documents',
   getParentRoute: () => DashboardRhRoute,
+} as any)
+const DashboardMedecinRecordsRoute = DashboardMedecinRecordsRouteImport.update({
+  id: '/records',
+  path: '/records',
+  getParentRoute: () => DashboardMedecinRoute,
 } as any)
 const DashboardManagerTeamRoute = DashboardManagerTeamRouteImport.update({
   id: '/team',
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
+  '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
+  '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
+  '/dashboard/medecin/records': typeof DashboardMedecinRecordsRoute
   '/dashboard/rh/documents': typeof DashboardRhDocumentsRoute
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/team'
+    | '/dashboard/medecin/records'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/team'
+    | '/dashboard/medecin/records'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -453,6 +464,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/team'
+    | '/dashboard/medecin/records'
     | '/dashboard/rh/documents'
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
@@ -612,6 +624,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/rh/documents'
       preLoaderRoute: typeof DashboardRhDocumentsRouteImport
       parentRoute: typeof DashboardRhRoute
+    }
+    '/dashboard/medecin/records': {
+      id: '/dashboard/medecin/records'
+      path: '/records'
+      fullPath: '/dashboard/medecin/records'
+      preLoaderRoute: typeof DashboardMedecinRecordsRouteImport
+      parentRoute: typeof DashboardMedecinRoute
     }
     '/dashboard/manager/team': {
       id: '/dashboard/manager/team'
@@ -812,10 +831,12 @@ const DashboardManagerRouteWithChildren =
   DashboardManagerRoute._addFileChildren(DashboardManagerRouteChildren)
 
 interface DashboardMedecinRouteChildren {
+  DashboardMedecinRecordsRoute: typeof DashboardMedecinRecordsRoute
   DashboardMedecinIndexRoute: typeof DashboardMedecinIndexRoute
 }
 
 const DashboardMedecinRouteChildren: DashboardMedecinRouteChildren = {
+  DashboardMedecinRecordsRoute: DashboardMedecinRecordsRoute,
   DashboardMedecinIndexRoute: DashboardMedecinIndexRoute,
 }
 
