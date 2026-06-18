@@ -4,6 +4,7 @@ const DEMO = [
   { email: "aya@wasl.app",     password: "aya12345",     full_name: "Aya EL HAQYQY",   role: "collab"  as const },
   { email: "yasmine@wasl.app", password: "yasmine12345", full_name: "Yasmine AMRI",    role: "manager" as const },
   { email: "sara@wasl.app",    password: "sara12345",    full_name: "Sara RAFIK",      role: "rh"      as const },
+  { email: "nadia@wasl.app",   password: "nadia12345",   full_name: "Dr. Nadia BENNANI", role: "medecin" as const },
   { email: "oussama@wasl.app", password: "oussama12345", full_name: "Oussama ETTALALI", role: "admin"   as const },
 ];
 
