@@ -354,6 +354,56 @@ export type Database = {
         }
         Relationships: []
       }
+      medical_requests: {
+        Row: {
+          created_at: string
+          description: string | null
+          doctor_notes: string | null
+          employee_id: string
+          id: string
+          preferred_date: string | null
+          scheduled_at: string | null
+          status: string
+          topic: string
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          doctor_notes?: string | null
+          employee_id: string
+          id?: string
+          preferred_date?: string | null
+          scheduled_at?: string | null
+          status?: string
+          topic: string
+          updated_at?: string
+          urgency?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          doctor_notes?: string | null
+          employee_id?: string
+          id?: string
+          preferred_date?: string | null
+          scheduled_at?: string | null
+          status?: string
+          topic?: string
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_requests_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mood_checks: {
         Row: {
           created_at: string
