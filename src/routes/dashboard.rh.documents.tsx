@@ -134,3 +134,105 @@ function decodeBody(path: string | null): string {
   if (!path?.startsWith("inline://")) return "";
   try { return decodeURIComponent(escape(atob(path.slice(9)))); } catch { return ""; }
 }
+
+const CATEGORIES = ["policy", "process", "benefits", "onboarding", "safety", "general"] as const;
+
+function EnterpriseDocsPanel({ onToast }: { onToast: (m: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<string>("policy");
+  const [content, setContent] = useState("");
+  const [docs, setDocs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase
+      .from("enterprise_documents" as any)
+      .select("id,title,category,content,created_at")
+      .order("created_at", { ascending: false });
+    setDocs((data ?? []) as any[]);
+    setLoading(false);
+  }
+  useEffect(() => { load(); }, []);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    const { data: u } = await supabase.auth.getUser();
+    const { error } = await supabase.from("enterprise_documents" as any).insert({
+      title, category, content, uploaded_by: u.user?.id,
+    });
+    setSaving(false);
+    if (error) { onToast(error.message); return; }
+    onToast("Document added to the AI knowledge base");
+    setOpen(false); setTitle(""); setContent(""); setCategory("policy");
+    load();
+  }
+
+  async function del(id: string) {
+    if (!confirm("Delete this document from the AI knowledge base?")) return;
+    const { error } = await supabase.from("enterprise_documents" as any).delete().eq("id", id);
+    if (error) onToast(error.message); else { onToast("Deleted"); load(); }
+  }
+
+  return (
+    <>
+      <Panel
+        label="ENTERPRISE KNOWLEDGE BASE"
+        title="AI assistant grounding (RAG)"
+        right={
+          <button onClick={() => setOpen(true)} className="pill-btn accent !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase">
+            <Plus className="w-3.5 h-3.5"/> Add doc
+          </button>
+        }
+      >
+        <div className="flex items-start gap-2 mb-3 p-3 rounded-xl bg-secondary/60 border border-border">
+          <Sparkles className="w-4 h-4 text-accent mt-0.5" />
+          <div className="text-[11px] text-muted-foreground leading-relaxed">
+            Documents added here are retrieved by the AI assistant to ground its answers — paste policy text, procedure summaries, FAQ entries, employee handbook chapters. Every answer using a doc is cited.
+          </div>
+        </div>
+        {loading && <div className="text-xs text-muted-foreground py-2">Loading…</div>}
+        {!loading && docs.length === 0 && <div className="text-xs text-muted-foreground py-4">No enterprise documents yet. Add the first one to ground the AI assistant.</div>}
+        {docs.map((d) => (
+          <div key={d.id} className="flex items-center gap-3 py-3 border-b border-border last:border-0">
+            <div className="w-10 h-10 rounded-lg bg-secondary grid place-items-center"><BookOpen className="w-4 h-4 text-accent" /></div>
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-sm truncate">{d.title}</div>
+              <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground">{d.category} · {new Date(d.created_at).toLocaleDateString()}</div>
+            </div>
+            <button onClick={() => del(d.id)} className="w-9 h-9 grid place-items-center rounded-full hover:bg-muted transition text-red-600">
+              <Trash2 className="w-4 h-4"/>
+            </button>
+          </div>
+        ))}
+      </Panel>
+
+      <Modal open={open} onClose={() => setOpen(false)} kicker="KNOWLEDGE BASE" title="Add a document"
+        footer={
+          <button form="ent-doc-form" type="submit" disabled={saving} className="pill-btn accent w-full justify-center !py-2.5 !text-[11px] tracking-[0.2em] uppercase disabled:opacity-50">
+            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : "Save & index"}
+          </button>
+        }>
+        <form id="ent-doc-form" onSubmit={submit} className="space-y-3">
+          <div className="field"><div className="relative">
+            <input id="ed-title" placeholder=" " value={title} onChange={e=>setTitle(e.target.value)} required />
+            <label htmlFor="ed-title">Title (e.g. Remote-work policy 2026)</label>
+          </div></div>
+          <div>
+            <div className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-2 font-bold">Category</div>
+            <select value={category} onChange={e=>setCategory(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:border-foreground">
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="field"><div className="relative">
+            <textarea id="ed-content" placeholder=" " rows={8} value={content} onChange={e=>setContent(e.target.value)} className="resize-none" required />
+            <label htmlFor="ed-content">Content (paste the full text — the AI will cite passages)</label>
+          </div></div>
+        </form>
+      </Modal>
+    </>
+  );
+}
