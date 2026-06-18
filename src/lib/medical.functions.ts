@@ -8,7 +8,8 @@ export const getMedicalSnapshot = createServerFn({ method: "GET" })
     const { data: isRH } = await supabase.rpc("has_role", { _user_id: userId, _role: "rh" });
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
     const { data: isMgr } = await supabase.rpc("has_role", { _user_id: userId, _role: "manager" });
-    if (!isRH && !isAdmin && !isMgr) throw new Error("Forbidden");
+    const { data: isMedic } = await supabase.rpc("has_role", { _user_id: userId, _role: "medecin" });
+    if (!isRH && !isAdmin && !isMgr && !isMedic) throw new Error("Forbidden");
 
     const since = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
     const [abs, eng, alertsRow, esc] = await Promise.all([
