@@ -18,7 +18,7 @@ export function BottomNav({ items }: { items: NavItem[] }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   const PRIMARY = 4;
-  const needsMore = items.length > PRIMARY + 1; // if exactly 5 we can show all
+  const needsMore = items.length > PRIMARY; // always show More when overflow exists
   const primary = needsMore ? items.slice(0, PRIMARY) : items;
   const overflow = needsMore ? items.slice(PRIMARY) : [];
 
