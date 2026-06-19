@@ -33,6 +33,7 @@ import { Route as DashboardMedecinRecordsRouteImport } from './routes/dashboard.
 import { Route as DashboardMedecinProfileRouteImport } from './routes/dashboard.medecin.profile'
 import { Route as DashboardMedecinAssistantRouteImport } from './routes/dashboard.medecin.assistant'
 import { Route as DashboardManagerTeamRouteImport } from './routes/dashboard.manager.team'
+import { Route as DashboardManagerSimulatorRouteImport } from './routes/dashboard.manager.simulator'
 import { Route as DashboardManagerQvtRouteImport } from './routes/dashboard.manager.qvt'
 import { Route as DashboardManagerProfileRouteImport } from './routes/dashboard.manager.profile'
 import { Route as DashboardManagerLeaveRouteImport } from './routes/dashboard.manager.leave'
@@ -174,6 +175,12 @@ const DashboardManagerTeamRoute = DashboardManagerTeamRouteImport.update({
   path: '/team',
   getParentRoute: () => DashboardManagerRoute,
 } as any)
+const DashboardManagerSimulatorRoute =
+  DashboardManagerSimulatorRouteImport.update({
+    id: '/simulator',
+    path: '/simulator',
+    getParentRoute: () => DashboardManagerRoute,
+  } as any)
 const DashboardManagerQvtRoute = DashboardManagerQvtRouteImport.update({
   id: '/qvt',
   path: '/qvt',
@@ -297,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
+  '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
@@ -336,6 +344,7 @@ export interface FileRoutesByTo {
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
+  '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
@@ -381,6 +390,7 @@ export interface FileRoutesById {
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
+  '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
   '/dashboard/manager/team': typeof DashboardManagerTeamRoute
   '/dashboard/medecin/assistant': typeof DashboardMedecinAssistantRoute
   '/dashboard/medecin/profile': typeof DashboardMedecinProfileRoute
@@ -427,6 +437,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/leave'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
+    | '/dashboard/manager/simulator'
     | '/dashboard/manager/team'
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
@@ -466,6 +477,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/leave'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
+    | '/dashboard/manager/simulator'
     | '/dashboard/manager/team'
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
@@ -510,6 +522,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/leave'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
+    | '/dashboard/manager/simulator'
     | '/dashboard/manager/team'
     | '/dashboard/medecin/assistant'
     | '/dashboard/medecin/profile'
@@ -710,6 +723,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardManagerTeamRouteImport
       parentRoute: typeof DashboardManagerRoute
     }
+    '/dashboard/manager/simulator': {
+      id: '/dashboard/manager/simulator'
+      path: '/simulator'
+      fullPath: '/dashboard/manager/simulator'
+      preLoaderRoute: typeof DashboardManagerSimulatorRouteImport
+      parentRoute: typeof DashboardManagerRoute
+    }
     '/dashboard/manager/qvt': {
       id: '/dashboard/manager/qvt'
       path: '/qvt'
@@ -893,6 +913,7 @@ interface DashboardManagerRouteChildren {
   DashboardManagerLeaveRoute: typeof DashboardManagerLeaveRoute
   DashboardManagerProfileRoute: typeof DashboardManagerProfileRoute
   DashboardManagerQvtRoute: typeof DashboardManagerQvtRoute
+  DashboardManagerSimulatorRoute: typeof DashboardManagerSimulatorRoute
   DashboardManagerTeamRoute: typeof DashboardManagerTeamRoute
   DashboardManagerIndexRoute: typeof DashboardManagerIndexRoute
 }
@@ -903,6 +924,7 @@ const DashboardManagerRouteChildren: DashboardManagerRouteChildren = {
   DashboardManagerLeaveRoute: DashboardManagerLeaveRoute,
   DashboardManagerProfileRoute: DashboardManagerProfileRoute,
   DashboardManagerQvtRoute: DashboardManagerQvtRoute,
+  DashboardManagerSimulatorRoute: DashboardManagerSimulatorRoute,
   DashboardManagerTeamRoute: DashboardManagerTeamRoute,
   DashboardManagerIndexRoute: DashboardManagerIndexRoute,
 }
