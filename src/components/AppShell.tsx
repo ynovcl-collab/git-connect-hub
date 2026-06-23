@@ -27,6 +27,7 @@ const NAV: Record<Role, { to: string; label: string; icon: React.ComponentType<{
   manager: [
     { to: "/dashboard/manager", label: "Overview", icon: LayoutDashboard },
     { to: "/dashboard/manager/team", label: "Team", icon: Users },
+    { to: "/dashboard/manager/presence", label: "Presence", icon: Fingerprint },
     { to: "/dashboard/manager/leave", label: "Leave", icon: CheckSquare },
     { to: "/dashboard/manager/insights", label: "Insights", icon: BarChart3 },
     { to: "/dashboard/manager/simulator", label: "What-if", icon: Calculator },
@@ -37,6 +38,7 @@ const NAV: Record<Role, { to: string; label: string; icon: React.ComponentType<{
   rh: [
     { to: "/dashboard/rh", label: "Overview", icon: LayoutDashboard },
     { to: "/dashboard/rh/people", label: "People", icon: HeartHandshake },
+    { to: "/dashboard/rh/presence", label: "Presence", icon: Fingerprint },
     { to: "/dashboard/rh/medical", label: "Medical", icon: Stethoscope },
     { to: "/dashboard/rh/documents", label: "Docs", icon: FileText },
     { to: "/dashboard/rh/workflows", label: "Workflows", icon: ClipboardList },
@@ -47,6 +49,7 @@ const NAV: Record<Role, { to: string; label: string; icon: React.ComponentType<{
     { to: "/dashboard/admin", label: "Control", icon: LayoutDashboard },
     { to: "/dashboard/admin/supervision", label: "Supervision", icon: Shield },
     { to: "/dashboard/admin/users", label: "Users", icon: Users },
+    { to: "/dashboard/admin/presence", label: "Presence", icon: Fingerprint },
     { to: "/dashboard/admin/security", label: "Security", icon: ShieldAlert },
     { to: "/dashboard/admin/settings", label: "Settings", icon: Settings },
     { to: "/dashboard/admin/profile", label: "Profile", icon: UserIcon },
