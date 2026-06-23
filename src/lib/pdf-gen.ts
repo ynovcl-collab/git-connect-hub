@@ -7,7 +7,8 @@ function sanitizeFileName(name: string) {
 
 export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595.28, 841.89]); // A4 in points
+  let page = pdfDoc.addPage([595.28, 841.89]); // A4 in points
+
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
