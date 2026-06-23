@@ -38,22 +38,25 @@ function parseCollaboratorCsv(csv: string): ImportCollaboratorRow[] {
   const lines = csv.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   if (lines.length < 2) throw new Error("CSV must include a header row and at least one data row.");
   const headers = splitCsvLine(lines[0]).map((h) => h.toLowerCase().trim());
-  return lines.slice(1).map((line, index) => {
+  return lines.slice(1).map((line) => {
     const values = splitCsvLine(line);
     const row: Record<string, string> = {};
     headers.forEach((header, idx) => {
       row[header] = values[idx] ?? "";
     });
+    const rawRole = (row.role ?? "").trim();
+    const parsedRole = RoleEnum.safeParse(rawRole);
     return {
       email: (row.email ?? "").trim().toLowerCase(),
       full_name: (row.full_name ?? row.name ?? "").trim(),
       department: (row.department ?? "").trim() || null,
       position: (row.position ?? "").trim() || null,
       hire_date: (row.hire_date ?? "").trim() || null,
-      role: (row.role ?? "").trim() || undefined,
+      role: parsedRole.success ? parsedRole.data : undefined,
     };
   }).filter((item) => item.email && item.full_name);
 }
+
 
 function generateTempPassword(length = 16) {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -231,7 +234,7 @@ export const importCollaborators = createServerFn({ method: "POST" })
             department: row.department || null,
             position: row.position || null,
             hire_date: row.hire_date || null,
-          }, { onConflict: ["id"] });
+          }, { onConflict: "id" });
         if (profileErr) {
           results.push({ email: row.email, status: `profile-error: ${profileErr.message}`, user_id: userIdToUse });
           continue;

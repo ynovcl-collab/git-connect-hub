@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createAiGatewayProvider } from "@/lib/ai-gateway.server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+type DbClient = SupabaseClient<Database>;
+
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   collab: `You are Wasl, the AI HR assistant by Humanai for an employee (collaborator).
@@ -51,10 +55,11 @@ const JAILBREAK_RE = /ignore (previous|all|the|prior)\s+(instructions|rules|prom
 const DOCUMENT_INTENT_RE = /\b(generate|create|draft|prepare|write|make|compose|produce)\b.*\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
 const DOCUMENT_INTENT_REVERSE = /\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b.*\b(generate|create|draft|prepare|write|make|compose|produce)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
 
-function classifyThreat(text: string): { level: "none" | "high" | "critical"; kind: string | null } {
+function classifyThreat(text: string): { level: "none" | "warning" | "critical"; kind: string | null } {
   if (HARMFUL_RE.test(text) || HARMFUL_FR.test(text)) return { level: "critical", kind: "harmful_content" };
-  if (JAILBREAK_RE.test(text)) return { level: "high", kind: "prompt_injection" };
+  if (JAILBREAK_RE.test(text)) return { level: "warning", kind: "prompt_injection" };
   return { level: "none", kind: null };
+
 }
 
 function isDocumentRequest(text: string): boolean {
@@ -117,7 +122,7 @@ function makeInlineStorage(body: string): string | null {
 }
 
 async function createDocumentFromAi(
-  adminClient: ReturnType<typeof createClient>,
+  adminClient: DbClient,
   userId: string,
   prompt: string,
   reply: string,
@@ -154,7 +159,7 @@ async function createDocumentFromAi(
 }
 
 async function createDocumentFromAiAsUser(
-  userClient: ReturnType<typeof createClient>,
+  userClient: DbClient,
   userId: string,
   prompt: string,
   reply: string,
@@ -239,16 +244,16 @@ export const Route = createFileRoute("/api/chat")({
 
         const createSupabaseAdminClient = () => {
           if (!hasSupabaseAdmin) return null;
-          return createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
+          return createClient<Database>(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
         };
 
-        const createSupabaseUserClient = (token: string) => createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+        const createSupabaseUserClient = (token: string) => createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
           global: { headers: { Authorization: `Bearer ${token}` } },
           auth: { persistSession: false },
         });
 
         const adminClient = createSupabaseAdminClient();
-        let userClient: ReturnType<typeof createClient> | null = null;
+        let userClient: DbClient | null = null;
 
         let userId: string | null = null;
         let userProfile: { full_name: string; position: string | null; department: string | null } | null = null;
@@ -474,7 +479,7 @@ export const Route = createFileRoute("/api/chat")({
               }
               if (adminClient ?? userClient) {
                 const alertClient = adminClient ?? userClient;
-                if (sensitiveTopic) {
+                if (sensitiveTopic && alertClient) {
                   if (adminClient) {
                     await adminClient.from("ai_escalations").insert({
                       user_id: userId,
@@ -487,25 +492,26 @@ export const Route = createFileRoute("/api/chat")({
                   await alertClient.from("alerts").insert({
                     title: `Sensitive AI request — ${sensitiveTopic.replace("_", " ")}`,
                     description: maskedPrompt,
-                    severity: sensitiveTopic === "mental_health" ? "high" : "medium",
+                    severity: sensitiveTopic === "mental_health" ? "critical" : "warning",
                     target_id: userId,
                   });
                 }
-                if (crossEmployeeProbe) {
+                if (alertClient && crossEmployeeProbe) {
                   await alertClient.from("alerts").insert({
                     title: "Cross-employee data probe",
                     description: maskedPrompt,
-                    severity: "medium",
+                    severity: "warning",
                     target_id: userId,
                   });
-                } else if (suspiciousOther) {
+                } else if (alertClient && suspiciousOther) {
                   await alertClient.from("alerts").insert({
                     title: "Suspicious AI assistant query",
                     description: maskedPrompt,
-                    severity: "medium",
+                    severity: "warning",
                     target_id: userId,
                   });
                 }
+
               }
             } catch (e) { console.error("audit log failed", e); }
             if (inDocumentFlow && adminClient && userId) {
@@ -516,7 +522,7 @@ export const Route = createFileRoute("/api/chat")({
               }
             } else if (inDocumentFlow && hasSupabaseUserAuth && authToken && userId) {
               try {
-                const userClient = createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+                const userClient = createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
                   global: { headers: { Authorization: `Bearer ${authToken}` } },
                   auth: { persistSession: false },
                 });

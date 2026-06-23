@@ -7,7 +7,8 @@ function sanitizeFileName(name: string) {
 
 export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595.28, 841.89]); // A4 in points
+  let page = pdfDoc.addPage([595.28, 841.89]); // A4 in points
+
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
@@ -49,7 +50,8 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
         y -= lineHeight;
         lineText = word;
         if (y < margin + 60) {
-          page.addPage();
+          page = pdfDoc.addPage([595.28, 841.89]);
+
           y = 820;
         }
       } else {
@@ -60,7 +62,7 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
       page.drawText(lineText, { x: margin, y, size: textSize, font: helvetica, color: rgb(0.08, 0.1, 0.18) });
       y -= lineHeight;
       if (y < margin + 60) {
-        page.addPage();
+        page = pdfDoc.addPage([595.28, 841.89]);
         y = 820;
       }
     }
@@ -71,7 +73,7 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
   page.drawText("Authorised signature", { x: margin + 300, y, size: 10, font: helvetica, color: rgb(0.36, 0.40, 0.46) });
 
   const pdfBytes = await pdfDoc.save();
-  return new Blob([pdfBytes], { type: "application/pdf" });
+  return new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
 }
 
 export async function downloadPdf(opts: DocumentPdfProps) {
