@@ -59,10 +59,10 @@ function Security() {
         <Panel title="Incident classification">
           {([
             { lv: "critical", c: "bg-destructive" },
-            { lv: "high", c: "bg-warning" },
-            { lv: "medium", c: "bg-accent" },
-            { lv: "low", c: "bg-success" },
+            { lv: "warning", c: "bg-warning" },
+            { lv: "info", c: "bg-accent" },
           ] as const).map((x) => {
+
             const n = counts[x.lv] ?? 0;
             const max = Math.max(1, ...Object.values(counts));
             return (
