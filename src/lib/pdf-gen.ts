@@ -50,7 +50,8 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
         y -= lineHeight;
         lineText = word;
         if (y < margin + 60) {
-          page.addPage();
+          page = pdfDoc.addPage([595.28, 841.89]);
+
           y = 820;
         }
       } else {
