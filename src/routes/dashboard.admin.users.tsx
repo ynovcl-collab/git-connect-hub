@@ -32,6 +32,10 @@ const STATUS: Record<U["s"], string> = {
   suspended: "bg-destructive/15 text-destructive",
 };
 
+function avatarUrl(name: string) {
+  return `https://api.dicebear.com/9.x/notionists/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=20`;
+}
+
 function AdminUsers() {
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<"all" | U["r"]>("all");
@@ -118,9 +122,8 @@ function AdminUsers() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {list.map(u => (
           <button key={u.e} onClick={() => setSel(u)} className="edunai-card p-4 text-left flex items-center gap-3 hover:border-foreground transition group">
-            <div className="w-12 h-12 rounded-2xl grid place-items-center text-white font-display font-bold text-lg shrink-0 bg-[var(--grad-brand)]">
-              {u.n.slice(0,1)}
-            </div>
+            <img src={avatarUrl(u.n)} alt={u.n} className="w-12 h-12 rounded-2xl shrink-0 bg-secondary object-cover" />
+
             <div className="flex-1 min-w-0">
               <div className="font-display font-bold text-sm tracking-tight truncate">{u.n}</div>
               <div className="text-[10px] tracking-[0.18em] uppercase text-muted-foreground mt-0.5 truncate">{u.e}</div>
@@ -152,9 +155,8 @@ function AdminUsers() {
         {sel && (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-2xl grid place-items-center text-white font-display font-bold text-2xl bg-[var(--grad-brand)]">
-                {sel.n.slice(0,1)}
-              </div>
+              <img src={avatarUrl(sel.n)} alt={sel.n} className="w-16 h-16 rounded-2xl bg-secondary object-cover" />
+
               <div>
                 <div className="font-display font-bold text-lg leading-tight">{sel.n}</div>
                 <div className="text-[10px] tracking-[0.2em] uppercase text-accent font-bold mt-1">{sel.r} · {sel.d}</div>
