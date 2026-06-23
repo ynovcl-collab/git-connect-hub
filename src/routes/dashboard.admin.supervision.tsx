@@ -34,10 +34,23 @@ const DEFAULT_RULES: Rule[] = [
 ];
 
 function loadRules(): Rule[] {
-  try { const j = localStorage.getItem("wasl.supervision.rules"); if (j) return JSON.parse(j); } catch {}
+  if (typeof window === "undefined") return DEFAULT_RULES;
+  try {
+    const j = localStorage.getItem("wasl.supervision.rules");
+    if (j) return JSON.parse(j);
+  } catch (error) {
+    console.error("Failed to load supervision rules from localStorage:", error);
+  }
   return DEFAULT_RULES;
 }
-function saveRules(r: Rule[]) { localStorage.setItem("wasl.supervision.rules", JSON.stringify(r)); }
+function saveRules(r: Rule[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("wasl.supervision.rules", JSON.stringify(r));
+  } catch (error) {
+    console.error("Failed to save supervision rules to localStorage:", error);
+  }
+}
 
 function SevPill({ s }: { s: string }) {
   const c = s === "critical" ? "bg-red-100 text-red-700" : s === "warning" ? "bg-amber-100 text-amber-700" : "bg-secondary text-muted-foreground";
@@ -60,10 +73,15 @@ function Supervision() {
 
   // Realtime updates on alerts table
   useEffect(() => {
-    const ch = supabase.channel("rt-alerts-admin")
+    const channelName = `rt-alerts-admin-${Math.random().toString(36).slice(2)}`;
+    const ch = supabase.channel(channelName)
       .on("postgres_changes", { event: "*", schema: "public", table: "alerts" }, () => qc.invalidateQueries({ queryKey: ["admin-alerts"] }))
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    return () => {
+      if (ch) {
+        supabase.removeChannel(ch);
+      }
+    };
   }, [qc]);
 
   async function ack(id: string) {
@@ -117,7 +135,12 @@ function Supervision() {
                     <span className="text-muted-foreground uppercase tracking-wider">N</span>
                     <input type="number" value={r.threshold} min={1} max={90} onChange={e => patchRule(r.id, { threshold: Number(e.target.value) })} className="w-16 rounded-md border border-border bg-background px-2 py-1 text-xs" />
                   </label>
-                  <select value={r.severity} onChange={e => patchRule(r.id, { severity: e.target.value as Rule["severity"] })} className="rounded-md border border-border bg-background px-2 py-1 text-xs">
+                  <select
+                    aria-label={`Severity for ${r.name}`}
+                    value={r.severity}
+                    onChange={e => patchRule(r.id, { severity: e.target.value as Rule["severity"] })}
+                    className="rounded-md border border-border bg-background px-2 py-1 text-xs"
+                  >
                     <option value="info">info</option>
                     <option value="warning">warning</option>
                     <option value="critical">critical</option>
@@ -153,8 +176,15 @@ function Supervision() {
                   </div>
                   <div className="flex flex-wrap gap-1 shrink-0">
                     <button onClick={() => setExpanded(isOpen ? null : a.id)} className="text-[10px] uppercase tracking-wider px-2 py-1.5 rounded-md border border-border hover:bg-muted"><Eye className="w-3 h-3 inline mr-1"/>Evidence</button>
-                    <select value={a.severity} onChange={e => classify(a.id, e.target.value as any)} className="text-[10px] uppercase rounded-md border border-border bg-background px-1 py-1">
-                      <option value="info">info</option><option value="warning">warning</option><option value="critical">critical</option>
+                    <select
+                      aria-label={`Change severity for alert ${a.title}`}
+                      value={a.severity}
+                      onChange={e => classify(a.id, e.target.value as any)}
+                      className="text-[10px] uppercase rounded-md border border-border bg-background px-1 py-1"
+                    >
+                      <option value="info">info</option>
+                      <option value="warning">warning</option>
+                      <option value="critical">critical</option>
                     </select>
                     <button disabled={busy === a.id} onClick={() => escalate(a.id)} className="text-[10px] uppercase tracking-wider px-2 py-1.5 rounded-md border border-amber-400 text-amber-700 hover:bg-amber-50"><ArrowUpRight className="w-3 h-3 inline mr-1"/>Escalate</button>
                     <button disabled={busy === a.id} onClick={() => ack(a.id)} className="text-[10px] uppercase tracking-wider px-2 py-1.5 rounded-md bg-foreground text-background">{busy === a.id ? <Loader2 className="w-3 h-3 inline animate-spin"/> : "Acknowledge"}</button>

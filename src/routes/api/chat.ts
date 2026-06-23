@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { createAiGatewayProvider } from "@/lib/ai-gateway.server";
 import { createClient } from "@supabase/supabase-js";
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   collab: `You are Wasl, the AI HR assistant by Humanai for an employee (collaborator).
 
-SCOPE: HR topics ONLY — leave, payroll, remote-work policy, internal mobility, onboarding, HR procedures, well-being at work.
+SCOPE: HR topics ONLY — leave, payroll, remote-work policy, internal mobility, onboarding, HR procedures, well-being at work, AND document generation (certificates, attestations, letters, contracts, policies).
 
 HARD REFUSALS (refuse briefly and firmly, then redirect to HR scope):
 - Any harmful, illegal, dangerous, violent or unethical request (weapons, explosives, drugs, hacking, self-harm, harassment, fraud, etc.)
@@ -18,6 +18,7 @@ Rules:
 - Be concise, warm, and professional. Use the user's language (French or English).
 - Ground answers in the validated HR knowledge base provided. If a topic requires personal data you don't have, say so and offer to escalate.
 - Never invent figures (leave balance, exact clauses).
+- When generating documents: produce the full, professional document text with all necessary fields clearly marked or pre-filled.
 - Suggest one concrete next step at the end of substantive answers.`,
   manager: `You are Wasl, the AI HR copilot by Humanai for a team manager.
 SCOPE: team engagement, workload, attrition risk, 1:1 prep, people-decision reasoning.
@@ -44,14 +45,146 @@ function maskPii(text: string): string {
   return out;
 }
 
-const HARMFUL_RE = /\b(bomb|explosiv|detonat|weapon|firearm|gun\s*(build|make)|kill\s+(someone|him|her|them|people|colleague|boss|manager)|murder|assassin|suicide|self.?harm|terror|arson|set\s+(fire|on\s+fire)|burn\s+(down|a|the|my|my\s+company|the\s+(company|office|building|factory|warehouse))|burn(ing)?\s+(the|a|my)?\s*(company|office|building|factory|workplace|warehouse)|destroy\s+(the|a|my)?\s*(company|office|server|database)|sabotage|harm\s+(someone|a\s+colleague|my\s+(boss|manager|colleague))|hurt\s+(someone|a\s+colleague|my\s+(boss|manager|colleague))|attack\s+(someone|my\s+(boss|manager|colleague|company))|threaten\s+(someone|my\s+(boss|manager|colleague))|hack(ing)?|exploit\s+(system|server)|malware|ransomware|phishing|ddos|steal\s+(money|data|funds|company\s+(data|money|funds))|embezzl|launder\s+money|insider\s+trading|child\s+(porn|abuse)|drug\s*(deal|make|synth)|cocaine|heroin|\bmeth\b|fentanyl|poison\s+(someone|food|water))\w*/i;
-const HARMFUL_FR = /\b(bombe|explosif|arme\s*(à\s*feu)?|comment\s+tuer|meurtre|assassin|suicide|automutilat|terroris|incendi|br[uû]ler\s+(l.?entreprise|la\s+(soci[eé]t[eé]|bo[iî]te|boutique|usine|bureau))|mettre\s+le\s+feu|d[eé]truire\s+(l.?entreprise|la\s+soci[eé]t[eé])|sabot(er|age)|faire\s+du\s+mal\s+à|blesser\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|chef))|menacer\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|chef))|attaquer\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|entreprise))|voler\s+(de\s+l.?argent|des\s+donn[eé]es|l.?entreprise|la\s+soci[eé]t[eé])|d[eé]tourn(er|ement)\s+(de\s+)?fonds|pirat(er|age)|maliciel|drogue\s+(faire|fabriqu)|coca[ïi]ne|h[ée]ro[ïi]ne|empoisonn)\w*/i;
+const HARMFUL_RE = /\b(bomb|explosiv|detonat|weapon|firearm|gun\s*(build|make)|kill\s+(someone|him|her|them|people|colleague|boss|manager)|murder|assassin|suicide|self.?harm|terror|arson|set\s+(fire|on\s+fire)|burn\s+(down|a|the|my|my\s+company|the\s+(company|office|building|factory|warehouse))|burn(ing)?\s+(the|a|my)?\s*(company|office|building|factory|workplace|warehouse)|destroy\s+(the|a|my)?\s*(company|office|server|database|evidence)|sabotage|harm\s+(someone|a\s+colleague|my\s+(boss|manager|colleague))|hurt\s+(someone|a\s+colleague|my\s+(boss|manager|colleague))|attack\s+(someone|my\s+(boss|manager|colleague|company))|threaten\s+(someone|my\s+(boss|manager|colleague))|hack(ing)?|exploit\s+(system|server)|malware|ransomware|phishing|ddos|steal\s+(money|data|funds|company\s+(data|money|funds))|embezzl|launder\s+money|insider\s+trading|child\s+(porn|abuse)|drug\s*(deal|make|synth)|cocaine|heroin|\bmeth\b|fentanyl|poison\s+(someone|food|water)|hide\s+(the|a|my)?\s*(body|corpse|evidence|dead\s+body|murder|crime)|dead\s+body|corpse|dispose\s+(of|the)\s+(body|corpse)|cover[- ]?up|cover\s+(up|my\s+tracks)|criminal)\w*/i;
+const HARMFUL_FR = /\b(bombe|explosif|arme\s*(à\s*feu)?|comment\s+tuer|meurtre|assassin|suicide|automutilat|terroris|incendi|br[uû]ler\s+(l.?entreprise|la\s+(soci[eé]t[eé]|bo[iî]te|boutique|usine|bureau))|mettre\s+le\s+feu|d[eé]truire\s+(l.?entreprise|la\s+soci[eé]t[eé]|preuves?|donn[eé]es?)|sabot(er|age)|faire\s+du\s+mal\s+à|blesser\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|chef))|menacer\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|chef))|attaquer\s+(quelqu.?un|mon\s+(coll[eè]gue|patron|entreprise))|voler\s+(de\s+l.?argent|des\s+donn[eé]es|l.?entreprise|la\s+soci[eé]t[eé])|d[eé]tourn(er|ement)\s+(de\s+)?fonds|pirat(er|age)|maliciel|drogue\s+(faire|fabriqu)|coca[ïi]ne|h[ée]ro[ïi]ne|empoisonn|cach(er|e)\s+(le|la|mon)?\s*(cadavre|corps|pr[eé]uves?|mort|crime|d[eé]lit)|cadavre|corps|se\s+d[eé]barrasser\s+du\s+corps|dissimul(er|ation)\s+(de|du)\s+(crime|d[eé]lit|cadavre)|cover[- ]?up|couvr(ir|e)\s+les?\s+traces?|criminel)\w*/i;
 const JAILBREAK_RE = /ignore (previous|all|the|prior)\s+(instructions|rules|prompts?)|reveal (your )?(system )?prompt|developer mode|\bdan\s+mode\b|act as (an? )?(unrestricted|uncensored|jailbroken)|bypass (your )?(rules|guidelines|safety)|pretend you (have no|are not bound)/i;
+const DOCUMENT_INTENT_RE = /\b(generate|create|draft|prepare|write|make|compose|produce)\b.*\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
+const DOCUMENT_INTENT_REVERSE = /\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b.*\b(generate|create|draft|prepare|write|make|compose|produce)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
 
 function classifyThreat(text: string): { level: "none" | "high" | "critical"; kind: string | null } {
   if (HARMFUL_RE.test(text) || HARMFUL_FR.test(text)) return { level: "critical", kind: "harmful_content" };
   if (JAILBREAK_RE.test(text)) return { level: "high", kind: "prompt_injection" };
   return { level: "none", kind: null };
+}
+
+function isDocumentRequest(text: string): boolean {
+  return DOCUMENT_INTENT_RE.test(text) || DOCUMENT_INTENT_REVERSE.test(text);
+}
+
+function inferDocumentType(text: string): "certificate" | "contract" | "policy" | "other" {
+  if (/\b(salary|payslip|attestation|certificate|loan|attest)\b/i.test(text)) return "certificate";
+  if (/\b(contract|contrat|agreement)\b/i.test(text)) return "contract";
+  if (/\b(policy|procedure|politique|guideline|guide)\b/i.test(text)) return "policy";
+  return "other";
+}
+
+function isLikelyDocumentHeading(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed) return false;
+  if (/^(sure[, ]+here'?s|here'?s|bonjour|hello|hi|yes[, ]? sure|of course|bien sûr|dear)/i.test(trimmed)) return false;
+  if (trimmed.length > 80) return false;
+  const keywordMatch = /\b(certificate|attestation|salary|loan|employment|contract|policy|letter|statement|request)\b/i.test(trimmed);
+  const titleCase = /^[A-Z][A-Za-z0-9'’\-\s,&()]{2,}$/i.test(trimmed);
+  return keywordMatch && titleCase;
+}
+
+function extractDocumentTitleFromReply(reply: string): string | null {
+  const lines = reply.split("\n").map((l) => l.trim()).filter(Boolean);
+  for (const line of lines.slice(0, 8)) {
+    const titleMatch = line.match(/^\s*(?:Title|Document title|Titre|Objet)[:\-]\s*(.+)$/i);
+    if (titleMatch?.[1]) return titleMatch[1].trim().slice(0, 120);
+  }
+
+  for (const line of lines.slice(0, 8)) {
+    if (isLikelyDocumentHeading(line)) return line.trim().slice(0, 120);
+  }
+
+  return null;
+}
+
+function inferDocumentTitle(reply: string, prompt: string): string {
+  const explicit = extractDocumentTitleFromReply(reply);
+  if (explicit) return explicit;
+
+  const lines = reply.split("\n").map((l) => l.trim()).filter(Boolean);
+  const firstLine = lines[0] ?? "";
+
+  const normalizedPrompt = prompt.replace(/\s+/g, " ").trim().toLowerCase();
+  const normalizedFirst = firstLine.replace(/\s+/g, " ").trim().toLowerCase();
+  if (normalizedFirst && normalizedFirst !== normalizedPrompt && normalizedFirst.length <= 120 && isLikelyDocumentHeading(firstLine)) {
+    return firstLine;
+  }
+
+  const match = prompt.match(/\b(salary certificate|leave request|remote[- ]work( request)?|internal transfer|loan attestation|loan|contract|policy|letter|attestation|statement)\b/i);
+  if (match) return match[0].replace(/\b([a-z])/g, (m) => m.toUpperCase());
+
+  return "Generated HR document";
+}
+
+function makeInlineStorage(body: string): string | null {
+  const encoded = Buffer.from(body, "utf8").toString("base64");
+  return encoded.length <= 4000 ? `inline://${encoded}` : null;
+}
+
+async function createDocumentFromAi(
+  adminClient: ReturnType<typeof createClient>,
+  userId: string,
+  prompt: string,
+  reply: string,
+) {
+  const { data: isRH } = await adminClient.rpc("has_role", { _user_id: userId, _role: "rh" });
+  const { data: isAdmin } = await adminClient.rpc("has_role", { _user_id: userId, _role: "admin" });
+  const privileged = !!(isRH || isAdmin);
+  const type = inferDocumentType(prompt);
+  const title = inferDocumentTitle(reply, prompt);
+  const body = reply.trim();
+  const storage_path = makeInlineStorage(body);
+  const status = privileged ? "approved" as const : "pending" as const;
+
+  const { data: row, error } = await adminClient
+    .from("documents")
+    .insert({
+      owner_id: userId,
+      type,
+      title,
+      storage_path,
+      body,
+      size_bytes: body.length,
+      issued_at: new Date().toISOString().slice(0, 10),
+      status,
+      requested_by: userId,
+      approved_by: status === "approved" ? userId : null,
+      approved_at: status === "approved" ? new Date().toISOString() : null,
+    })
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return row;
+}
+
+async function createDocumentFromAiAsUser(
+  userClient: ReturnType<typeof createClient>,
+  userId: string,
+  prompt: string,
+  reply: string,
+) {
+  const type = inferDocumentType(prompt);
+  const title = inferDocumentTitle(reply, prompt);
+  const body = reply.trim();
+  const storage_path = makeInlineStorage(body);
+  const status = "pending" as const;
+
+  const { data: row, error } = await userClient
+    .from("documents")
+    .insert({
+      owner_id: userId,
+      type,
+      title,
+      storage_path,
+      body,
+      size_bytes: body.length,
+      issued_at: new Date().toISOString().slice(0, 10),
+      status,
+      requested_by: userId,
+      approved_by: null,
+      approved_at: null,
+    })
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return row;
 }
 
 // Sensitive topics that should be answered with care AND escalated to a human (HR)
@@ -90,58 +223,136 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Messages are required", { status: 400 });
         }
 
-        const key = process.env.LOVABLE_API_KEY;
+        const key = process.env.GROQ_API_KEY || process.env.LOVABLE_API_KEY;
         if (!key) {
           return new Response(
-            "The AI assistant is not configured: LOVABLE_API_KEY is missing. On Lovable Cloud the key is provisioned automatically — in local dev, add LOVABLE_API_KEY to your .env file.",
+            "The AI assistant is not configured: GROQ_API_KEY or LOVABLE_API_KEY is missing. Add the key to your environment.",
             { status: 500 },
           );
         }
 
+        const SUPABASE_URL = process.env.SUPABASE_URL;
+        const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
+        const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const hasSupabaseUserAuth = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+        const hasSupabaseAdmin = Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
+
+        const createSupabaseAdminClient = () => {
+          if (!hasSupabaseAdmin) return null;
+          return createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
+        };
+
+        const createSupabaseUserClient = (token: string) => createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+          global: { headers: { Authorization: `Bearer ${token}` } },
+          auth: { persistSession: false },
+        });
+
+        const adminClient = createSupabaseAdminClient();
+        let userClient: ReturnType<typeof createClient> | null = null;
+
         let userId: string | null = null;
         let userProfile: { full_name: string; position: string | null; department: string | null } | null = null;
+        let authToken: string | null = null;
+
         try {
           const auth = request.headers.get("authorization");
+          console.log("[auth] Authorization header present:", !!auth);
           if (auth?.startsWith("Bearer ")) {
             const token = auth.slice(7);
-            const supa = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, { auth: { persistSession: false } });
-            const { data } = await supa.auth.getUser(token);
-            userId = data.user?.id ?? null;
-            if (userId) {
-              const admin = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
-              const { data: p } = await admin.from("profiles").select("full_name,position,department").eq("id", userId).maybeSingle();
+            authToken = token;
+            console.log("[auth] Bearer token found. Length:", token.length);
+            
+            // Decode JWT to extract userId (sub claim)
+            try {
+              const parts = token.split(".");
+              if (parts.length === 3) {
+                const payload = JSON.parse(
+                  Buffer.from(parts[1], "base64").toString("utf-8")
+                );
+                userId = payload.sub ?? null;
+                console.log("[auth] userId extracted from JWT:", userId);
+              }
+            } catch (decodeErr) {
+              console.error("[auth] Failed to decode JWT:", decodeErr);
+            }
+            
+            // Create userClient for RLS-protected operations
+            if (hasSupabaseUserAuth) {
+              userClient = createSupabaseUserClient(token);
+              console.log("[auth] userClient created");
+            }
+
+            if (userId && adminClient) {
+              const { data: p } = await adminClient.from("profiles").select("full_name,position,department").eq("id", userId).maybeSingle();
+              if (p) userProfile = p as { full_name: string; position: string | null; department: string | null };
+            } else if (userId && userClient) {
+              const { data: p } = await userClient.from("profiles").select("full_name,position,department").eq("id", userId).maybeSingle();
               if (p) userProfile = p as { full_name: string; position: string | null; department: string | null };
             }
+          } else {
+            console.log("[auth] No Bearer token found in Authorization header");
           }
-        } catch { /* ignore */ }
+        } catch (e) { 
+          console.error("[auth] unexpected error:", e);
+        }
+
 
         const uiMessages = messages as UIMessage[];
         const lastUser = [...uiMessages].reverse().find((m) => m.role === "user");
+        const lastAssistant = [...uiMessages].reverse().find((m) => m.role === "assistant");
         const lastUserText =
           lastUser?.parts?.map((p) => (p.type === "text" ? p.text : "")).join(" ").slice(0, 2000) ?? "";
+        const lastAssistantText =
+          lastAssistant?.parts?.map((p) => (p.type === "text" ? p.text : "")).join(" ").slice(0, 2000) ?? "";
+
+        // Check if we're in a document generation flow (direct request OR responding to "I need details")
+        const isDirectDocRequest = isDocumentRequest(lastUserText);
+        const isFollowUpToDocRequest = !isDirectDocRequest && isDocumentRequest(lastAssistantText) && /\b(need|require|provide|give|share|tell|specify|include|information|details|information)\b/i.test(lastAssistantText);
+        const inDocumentFlow = isDirectDocRequest || isFollowUpToDocRequest;
 
         const threat = classifyThreat(lastUserText);
         const crossEmployeeProbe = role === "collab" && /\b(another|other|autre)\s+(employee|collaborateur|colleague|coll[eé]gue|person)\b|\b(his|her|son|sa) (salary|salaire|wage|bonus|prime)\b/i.test(lastUserText);
         const suspiciousOther = /\bservice[_ ]role|api[_ ]?key|reveal (your )?prompt|system prompt\b/i.test(lastUserText);
         const sensitiveTopic = classifySensitive(lastUserText);
+        console.log("[classification] threat:", threat.level, "kind:", threat.kind, "crossEmployeeProbe:", crossEmployeeProbe, "suspiciousOther:", suspiciousOther);
 
         // HARD BLOCK harmful or jailbreak — never reach the model
         if (threat.level !== "none") {
           try {
-            const admin = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
             const masked = maskPii(lastUserText).slice(0, 300);
-            await admin.from("audit_logs").insert({
-              actor_id: userId,
-              action: "ai.chat.blocked",
-              entity: "assistant",
-              metadata: { role, kind: threat.kind, severity: threat.level, prompt_preview: masked, flagged: true },
-            });
-            await admin.from("alerts").insert({
-              title: threat.kind === "harmful_content" ? "Harmful AI request blocked" : "Prompt-injection attempt blocked",
-              description: masked,
-              severity: threat.level,
-              target_id: userId,
-            });
+            const logClient = adminClient ?? userClient;
+            console.log("[audit] Attempting to log ai.chat.blocked. logClient:", logClient ? "exists" : "null", "userId:", userId);
+            if (logClient && userId) {
+              const { error } = await logClient.from("audit_logs").insert({
+                actor_id: userId,
+                action: "ai.chat.blocked",
+                entity: "assistant",
+                metadata: { role, kind: threat.kind, severity: threat.level, prompt_preview: masked, flagged: true },
+              });
+              if (error) console.error("[audit] block-insert error:", error.message);
+              else console.log("[audit] ai.chat.blocked logged successfully");
+            } else {
+              console.warn("[audit] Skipping ai.chat.blocked: logClient or userId missing", { hasLogClient: !!logClient, hasUserId: !!userId });
+            }
+            // Log alert for admin dashboard
+            const alertClient = adminClient ?? userClient;
+            if (alertClient && userId) {
+              const alertData = {
+                title: threat.kind === "harmful_content" ? "Harmful AI request blocked" : "Prompt-injection attempt blocked",
+                description: masked,
+                severity: threat.level,
+                target_id: userId,
+              };
+              console.log("[alert] attempting insert - severity:", threat.level, "alertData:", alertData);
+              const { error: alertErr } = await alertClient.from("alerts").insert(alertData);
+              if (alertErr) {
+                console.error("[alert] insert error:", alertErr.message, "code:", alertErr.code, "full:", alertErr);
+              } else {
+                console.log("[alert] created - severity:", threat.level);
+              }
+            } else {
+              console.warn("[alert] Skipping: no client or userId", { hasAlertClient: !!alertClient, hasUserId: !!userId });
+            }
           } catch (e) { console.error("block-log failed", e); }
 
           const refusal = refusalMessage(threat.kind ?? "");
@@ -174,14 +385,13 @@ export const Route = createFileRoute("/api/chat")({
         let kbContext = "";
         const citedTitles: string[] = [];
         try {
-          const admin = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
           const tokens = Array.from(new Set(lastUserText.toLowerCase().match(/[a-zàâçéèêëîïôûùüÿñæœ]{4,}/g) ?? [])).slice(0, 8);
-          if (tokens.length) {
+          if (adminClient && tokens.length) {
             const ors = tokens.map((t) => `title.ilike.%${t}%,content.ilike.%${t}%,tags.cs.{${t}}`).join(",");
             const orsDocs = tokens.map((t) => `title.ilike.%${t}%,content.ilike.%${t}%`).join(",");
             const [arts, entDocs] = await Promise.all([
-              admin.from("kb_articles").select("title,category,content").eq("published", true).or(ors).limit(3),
-              admin.from("enterprise_documents").select("title,category,content").or(orsDocs).limit(3),
+              adminClient.from("kb_articles").select("title,category,content").eq("published", true).or(ors).limit(3),
+              adminClient.from("enterprise_documents").select("title,category,content").or(orsDocs).limit(3),
             ]);
             const merged: { title: string; category: string; content: string; source: string }[] = [];
             (arts.data ?? []).forEach((a: any) => merged.push({ ...a, source: "KB" }));
@@ -196,7 +406,7 @@ export const Route = createFileRoute("/api/chat")({
 
 
         const profileCtx = userProfile
-          ? `\n\nThe current user is ${userProfile.full_name}${userProfile.position ? `, ${userProfile.position}` : ""}${userProfile.department ? ` (${userProfile.department})` : ""}.`
+          ? `\n\nCURRENT USER PROFILE (for document generation and personalization):\n- Name: ${userProfile.full_name}\n- Position: ${userProfile.position || "Not specified"}\n- Department: ${userProfile.department || "Not specified"}\n- Today's date: ${new Date().toISOString().slice(0, 10)}`
           : "";
         const guard = crossEmployeeProbe
           ? "\n\nIMPORTANT: The user appears to ask about another employee's private data. Politely refuse, remind them of confidentiality, and suggest contacting HR."
@@ -207,10 +417,23 @@ export const Route = createFileRoute("/api/chat")({
         const escalationRule = sensitiveTopic
           ? `\n\nSENSITIVE TOPIC DETECTED (${sensitiveTopic}). Respond with empathy and care, give safe general information ONLY (never diagnose, never give legal advice), and END your reply with: "I've flagged this for a human HR specialist who will reach out to you privately." Do not minimize the user's concern.`
           : "";
-        const systemPrompt = (SYSTEM_PROMPTS[role] ?? SYSTEM_PROMPTS.collab) + profileCtx + kbContext + guard + citeRule + escalationRule;
+        const documentRule = inDocumentFlow
+          ? "\n\nDOCUMENT GENERATION REQUEST DETECTED: Generate a complete, professional, formal document using the user profile data above and any details the user provided. Match the requested document type exactly (Salary Certificate, Leave Request, Remote-Work Request, Internal Transfer, Loan Attestation, etc.). Start the response with a one-line title heading. Fill in ALL fields (name, position, department, dates, period, reason, purpose, etc.). Format it professionally with proper spacing and sections. After the document text, add one line: \"[This document is now saved to your Documents section pending HR approval and available for PDF download from the chat.]\""
+          : "";
+        const systemPrompt = (SYSTEM_PROMPTS[role] ?? SYSTEM_PROMPTS.collab) + profileCtx + kbContext + guard + citeRule + escalationRule + documentRule;
 
-        const gateway = createLovableAiGatewayProvider(key);
-        const model = gateway("google/gemini-2.5-flash");
+        // Ensure we use the correct OpenRouter base URL (guard against legacy hosts)
+        process.env.OPENROUTER_URL = process.env.OPENROUTER_URL ?? "https://openrouter.ai/api/v1";
+        console.log("[ai] Using OpenRouter base URL:", process.env.OPENROUTER_URL);
+        const gateway = createAiGatewayProvider({
+          openRouterApiKey: process.env.OPENROUTER_API_KEY,
+          openRouterBaseURL: process.env.OPENROUTER_URL,
+          groqApiKey: key,
+        });
+        const modelName = process.env.OPENROUTER_API_KEY
+          ? process.env.OPENROUTER_MODEL || "gpt-4o-mini"
+          : process.env.GROQ_MODEL || process.env.LOVABLE_MODEL || "groq-1";
+        const model = gateway(modelName);
 
         const result = streamText({
           model,
@@ -218,59 +441,90 @@ export const Route = createFileRoute("/api/chat")({
           messages: await convertToModelMessages(uiMessages),
           onFinish: async ({ text }) => {
             try {
-              const admin = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
               const maskedPrompt = maskPii(lastUserText).slice(0, 300);
               const maskedReply = maskPii(text).slice(0, 300);
               const flagged = crossEmployeeProbe || suspiciousOther;
-              await admin.from("audit_logs").insert({
-                actor_id: userId,
-                action: flagged ? "ai.chat.suspicious" : "ai.chat",
-                entity: "assistant",
-                entity_id: null,
-                metadata: {
-                  role,
-                  prompt_preview: maskedPrompt,
-                  reply_preview: maskedReply,
-                  reply_length: text.length,
-                  flagged,
-                  kb_hits: kbContext ? kbContext.split("###").length - 1 : 0,
-                  cited: citedTitles,
-                  sensitive_topic: sensitiveTopic,
-                  cross_employee_probe: crossEmployeeProbe,
-                },
-              });
-              if (sensitiveTopic) {
-                await admin.from("ai_escalations").insert({
-                  user_id: userId,
-                  role,
-                  topic: sensitiveTopic,
-                  prompt_excerpt: maskedPrompt,
-                  status: "open",
+              const logClient = adminClient ?? userClient;
+              console.log("[audit] onFinish - attempting to log chat. logClient:", logClient ? "exists" : "null", "userId:", userId, "flagged:", flagged);
+              if (logClient && userId) {
+                const { error } = await logClient.from("audit_logs").insert({
+                  actor_id: userId,
+                  action: flagged ? "ai.chat.suspicious" : "ai.chat",
+                  entity: "assistant",
+                  entity_id: null,
+                  metadata: {
+                    role,
+                    prompt_preview: maskedPrompt,
+                    reply_preview: maskedReply,
+                    reply_length: text.length,
+                    flagged,
+                    kb_hits: kbContext ? kbContext.split("###").length - 1 : 0,
+                    cited: citedTitles,
+                    sensitive_topic: sensitiveTopic,
+                    cross_employee_probe: crossEmployeeProbe,
+                  },
                 });
-                await admin.from("alerts").insert({
-                  title: `Sensitive AI request — ${sensitiveTopic.replace("_", " ")}`,
-                  description: maskedPrompt,
-                  severity: sensitiveTopic === "mental_health" ? "high" : "medium",
-                  target_id: userId,
-                });
+                if (error) {
+                  console.error("[audit] chat-insert error:", error.message);
+                } else {
+                  console.log("[audit] ai.chat" + (flagged ? ".suspicious" : "") + " logged successfully");
+                }
+              } else {
+                console.warn("[audit] onFinish - Skipping audit: missing logClient or userId", { hasLogClient: !!logClient, hasUserId: !!userId });
               }
-              if (crossEmployeeProbe) {
-                await admin.from("alerts").insert({
-                  title: "Cross-employee data probe",
-                  description: maskedPrompt,
-                  severity: "medium",
-                  target_id: userId,
-                });
-              } else if (suspiciousOther) {
-                await admin.from("alerts").insert({
-                  title: "Suspicious AI assistant query",
-                  description: maskedPrompt,
-                  severity: "medium",
-                  target_id: userId,
-                });
+              if (adminClient ?? userClient) {
+                const alertClient = adminClient ?? userClient;
+                if (sensitiveTopic) {
+                  if (adminClient) {
+                    await adminClient.from("ai_escalations").insert({
+                      user_id: userId,
+                      role,
+                      topic: sensitiveTopic,
+                      prompt_excerpt: maskedPrompt,
+                      status: "open",
+                    });
+                  }
+                  await alertClient.from("alerts").insert({
+                    title: `Sensitive AI request — ${sensitiveTopic.replace("_", " ")}`,
+                    description: maskedPrompt,
+                    severity: sensitiveTopic === "mental_health" ? "high" : "medium",
+                    target_id: userId,
+                  });
+                }
+                if (crossEmployeeProbe) {
+                  await alertClient.from("alerts").insert({
+                    title: "Cross-employee data probe",
+                    description: maskedPrompt,
+                    severity: "medium",
+                    target_id: userId,
+                  });
+                } else if (suspiciousOther) {
+                  await alertClient.from("alerts").insert({
+                    title: "Suspicious AI assistant query",
+                    description: maskedPrompt,
+                    severity: "medium",
+                    target_id: userId,
+                  });
+                }
               }
             } catch (e) { console.error("audit log failed", e); }
-          },
+            if (inDocumentFlow && adminClient && userId) {
+              try {
+                await createDocumentFromAi(adminClient, userId, lastUserText, text);
+              } catch (e) {
+                console.error("AI document save failed", e);
+              }
+            } else if (inDocumentFlow && hasSupabaseUserAuth && authToken && userId) {
+              try {
+                const userClient = createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+                  global: { headers: { Authorization: `Bearer ${authToken}` } },
+                  auth: { persistSession: false },
+                });
+                await createDocumentFromAiAsUser(userClient, userId, lastUserText, text);
+              } catch (e) {
+                console.error("AI document save (user) failed", e);
+              }
+            }          },
         });
 
         return result.toUIMessageStreamResponse({ originalMessages: uiMessages });

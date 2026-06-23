@@ -1,0 +1,345 @@
+YDAYS 2026
+Plateforme IA RH
+Automatisation, pilotage prédictif et accompagnement des collaborateurs
+
+1- Contexte :
+Dans le cadre d'une démarche d'innovation autour de la transformation digitale des ressources humaines, ce
+projet vise à concevoir une plateforme intelligente capable d'assister les équipes RH, les managers et la
+direction dans la gestion quotidienne du capital humain. Les services RH sont souvent confrontés à plusieurs
+limites questions répétitives des collaborateurs, données RH dispersées, tableaux de bord produits avec
+retard, suivi insuffisant des signaux faibles de désengagement, ainsi que des processus d'onboarding et
+d'offboarding encore largement administratifs. Ces tâches consomment du temps, augmentent le risque
+d'erreur et limitent la capacité des équipes RH à se concentrer sur l'accompagnement humain et la prise de
+décision stratégique.
+L'objectif principal de ce projet est donc de développer une solution web sécurisée, augmentée par
+l'intelligence artificielle, permettant de centraliser les informations RH dans une base de données interne,
+d'automatiser les workflows critiques et de produire des analyses prédictives fiables.
+La plateforme devra combiner un assistant conversationnel RH, un moteur de génération documentaire, un
+tableau de bord automatisé, un système d'alerte sur les risques sociaux, un module de supervision des
+usages de l'assistant IA et des agents IA dédiés aux parcours d'entrée et de sortie des collaborateurs.
+Dans une première version, la solution ne dépendra pas d'une connexion directe à un SIRH existant. Les
+données seront saisies, importées ou synchronisées dans une base de données RH propre à la plateforme.
+L'intégration avec un SIRH pourra être envisagée ultérieurement comme une évolution fonctionnelle.
+L'axe de recherche majeur portera sur la capacité de l'IA à transformer des données RH structurées et semistructurées en recommandations utiles, explicables et actionnables, tout en respectant les exigences de
+confidentialité, de conformité, de traçabilité et d'éthique propres aux données personnelles des
+collaborateurs.
+
+YDAYS - Année universitaire 2025/2026
+
+1
+
+2- Public cible de la solution :
+• Collaborateurs : utilisateurs finaux souhaitant obtenir rapidement des réponses fiables à leurs
+questions RH concernant les congés, la paie, la mobilité interne, les procédures administratives, les
+avantages sociaux ou les règles internes de l'entreprise.
+• Managers : utilisateurs opérationnels ayant besoin d'indicateurs clairs pour suivre l'engagement,
+l'absentéisme, la charge de travail, les risques de départ et les besoins d'accompagnement au sein
+de leurs équipes.
+• Équipes RH : utilisateurs administratifs et stratégiques cherchant à réduire les tâches répétitives,
+automatiser la génération de documents, fiabiliser les reportings, gérer les processus d'onboarding et
+d'offboarding, superviser les alertes sensibles et prioriser les actions à forte valeur humaine.
+• Direction Générale et Contrôle de Gestion : utilisateurs décisionnels ayant besoin de tableaux de
+bord consolidés, d'indicateurs actualisés et de projections sur la masse salariale, les effectifs, le
+turnover, l'absentéisme et la mobilité interne.
+• Administrateurs de la plateforme : profils techniques responsables de la configuration des accès,
+de la gestion des rôles, du suivi des logs, de la surveillance des comportements suspects et du
+traitement des alertes de sécurité.
+• Médecine du travail et Responsables QVT : parties prenantes concernées par la prévention des
+risques psychosociaux, la détection précoce des situations de désengagement et l'amélioration de la
+qualité de vie au travail.
+
+3- Spécifications et fonctionnalités attendues :
+3.1. Pour les utilisateurs collaborateurs :
+• Assistant IA RH conversationnel :
+o Réponse instantanée aux questions courantes liées aux congés, absences, paie, mobilité,
+procédures internes et politiques RH.
+o Disponibilité 24/7 via une interface web simple et intégrable aux outils internes.
+o Formulation des réponses à partir des documents RH validés: politique RH, conventions
+collectives, guides internes et procédures administratives.
+o Redirection automatique vers un référent RH humain lorsque la demande est sensible, ambiguë
+ou nécessite une validation personnalisée.
+o Refus contrôlé des réponses lorsque l'utilisateur demande des informations situées en dehors
+de son périmètre d'autorisation.
+• Génération automatique de documents RH :
+o Création assistée d'attestations, formulaires, demandes internes, synthèses RH et courriers
+standards.
+o Préremplissage intelligent à partir des données autorisées du collaborateur.
+YDAYS - Année universitaire 2025/2026
+
+2
+
+o Vérification de cohérence avant validation par l'équipe RH.
+o Historisation des documents générés afin de faciliter leur suivi et leur consultation.
+• Parcours d'onboarding personnalisé :
+o Génération automatique d'un calendrier d'intégration structuré sur 30 jours.
+o Synthèse des manuels internes, feuilles de route métier et informations spécifiques au poste.
+o Recommandation des formations, interlocuteurs clés, documents à lire et actions à effectuer
+durant les premières semaines.
+o Suivi de l'avancement du nouveau collaborateur et alertes en cas d'étape non réalisée.
+• Expérience collaborateur améliorée :
+o Accès centralisé aux informations RH essentielles.
+o Réduction du temps d'attente pour les réponses administratives.
+o Meilleure compréhension des processus internes grâce à des explications simples et
+contextualisées.
+o Renforcement de l'autonomie des collaborateurs dans leurs démarches RH courantes.
+
+3.2. Pour les équipes RH, managers et décideurs :
+• Base de données RH interne :
+o Centralisation
+
+des
+
+informations
+
+essentielles
+
+concernant
+
+les
+
+collaborateurs,
+
+absences,
+
+documents, postes, départements, entretiens et indicateurs internes.
+o Alimentation de la base par saisie manuelle, import de fichiers structurés ou formulaires
+administratifs.
+o Mise à jour contrôlée des données par les profils autorisés.
+o Possibilité de préparer une architecture ouverte afin de connecter ultérieurement la solution à un
+SIRH existant.
+• Dashboard RH automatisé et prédictif :
+o Exploitation de la base de données RH interne pour produire automatiquement les tableaux de
+bord.
+o Mise à jour des KPI RH : effectifs, absentéisme, turnover, mobilité interne, pyramide des âges,
+masse salariale et engagement.
+o Visualisation des indicateurs clés par entité, département, site ou équipe.
+o Réduction progressive des fichiers dispersés et centralisation des informations RH dans une
+source unique et contrôlée.
+• Analyse prédictive et scénarios RH :
+o Projection de l'évolution des effectifs et de la masse salariale.
+o Simulation de scénarios liés au turnover, à l'absentéisme ou à la mobilité interne.
+o Détection des écarts inhabituels dans les données RH.
+o Production de rapports conformes, auditables et exploitables par la direction.
+YDAYS - Année universitaire 2025/2026
+
+3
+
+• Détection précoce du désengagement :
+o Croisement des données sociales telles que l'absentéisme, les arrêts maladie, les enquêtes
+d'engagement, les entretiens annuels, la charge de travail et les feedbacks internes.
+o Identification des signaux faibles pouvant indiquer un risque de burnout, de désengagement ou
+de départ.
+o Génération d'alertes préventives pour les managers et les équipes RH.
+o Proposition de plans d'action ciblés: entretien de suivi, ajustement de charge, accompagnement
+managérial, formation ou mobilité.
+• Analyse des comportements avec l'assistant IA :
+o Collecte de logs liés aux interactions avec l'assistant IA afin de suivre les usages, détecter les
+anomalies et améliorer la qualité du service.
+o Analyse des comportements inhabituels, comme les demandes répétées d'accès à des données
+confidentielles, les tentatives de contournement des règles ou les requêtes visant des
+informations non autorisées.
+o Production d'indicateurs de sécurité permettant de mesurer la fréquence des tentatives d'accès
+refusées, des requêtes sensibles et des alertes générées.
+o Mise à disposition d'un espace de supervision pour les administrateurs afin de consulter les
+événements importants, sans exposer inutilement le contenu personnel des conversations.
+• Alertes RH et administrateurs :
+o Déclenchement d'alertes lorsqu'un utilisateur tente d'obtenir, via l'assistant IA, des informations
+auxquelles son rôle ne donne pas accès.
+o Notification des administrateurs ou responsables RH autorisés en cas de comportement
+suspect, répétitif ou critique.
+o Classification des alertes selon leur niveau de gravité simple anomalie, tentative répétée,
+tentative critique ou risque de fuite de données.
+o Conservation d'un historique des alertes pour faciliter les audits internes, les investigations et
+l'amélioration continue des règles de sécurité.
+• Workflows agentiques d'offboarding :
+o Génération de formulaires de sortie personnalisés selon le poste, l'ancienneté et le contexte du
+départ.
+o Suivi automatique des étapes de conformité restitution du matériel, révocation des accès,
+clôture administrative et transfert des responsabilités.
+o Assistance à la capitalisation des connaissances avant le départ du collaborateur.
+o Création d'une synthèse de transfert pour préserver les informations clés liées aux projets,
+outils, contacts et procédures.
+• Pilotage RH augmenté :
+o Centralisation des données RH dans une interface unique.
+YDAYS - Année universitaire 2025/2026
+
+4
+
+o Priorisation automatique des situations nécessitant une intervention humaine.
+o Aide à la décision pour les managers, les équipes RH, les administrateurs et la
+direction.
+o Libération de temps pour les missions RH stratégiques, la supervision des risques et
+l'accompagnement des collaborateurs.
+
+3.3. Sécurisation :
+• Authentification et contrôle d'accès :
+o Mise en place d'une authentification sécurisée compatible avec les standards d'entreprise.
+o Gestion des rôles et permissions selon le profil utilisateur collaborateur, manager, RH, direction
+ou administrateur.
+o Accès limité aux données strictement nécessaires selon le principe du moindre privilège.
+o Vérification du rôle de l'utilisateur avant toute réponse de l'assistant IA portant sur des données
+sensibles.
+• Protection des données sensibles :
+o Chiffrement des données personnelles, historiques de conversation, documents RH et
+indicateurs sensibles.
+o Journalisation des accès et actions réalisées sur la plateforme.
+o Conservation maîtrisée des données selon leur finalité.
+o Séparation des données sensibles afin de limiter leur exposition dans les modules analytiques.
+• Sécurité applicative :
+o Validation des entrées utilisateurs pour prévenir les injections SQL, XSS et manipulations
+malveillantes.
+o Protection contre les tentatives de prompt injection visant à détourner l'assistant IA.
+o Filtrage des réponses générées afin d'éviter la divulgation d'informations confidentielles.
+o Mise en place de règles de contrôle pour empêcher l'IA de fournir des informations non
+autorisées.
+• Analyse des comportements utilisateurs avec l'assistant IA :
+o Enregistrement des interactions sensibles avec l'assistant IA afin de produire des journaux
+d'activité exploitables par les administrateurs autorisés.
+o Analyse des comportements inhabituels, comme les demandes répétées d'accès à des données
+confidentielles, les tentatives de contournement des règles ou les requêtes ambiguës visant des
+informations non autorisées.
+o Détection des usages à risque sans exposer inutilement le contenu personnel des
+conversations.
+o Production d'indicateurs de sécurité permettant d'évaluer la fréquence des tentatives d'accès
+non autorisé via l'assistant IA.
+
+YDAYS - Année universitaire 2025/2026
+
+5
+
+• Alertes RH et Administrateurs en cas de tentative non autorisée :
+o Déclenchement d'alertes lorsqu'un utilisateur tente d'obtenir, via l'assistant IA, des informations
+auxquelles son rôle ne donne pas accès.
+o Notification des administrateurs ou responsables RH autorisés en cas de comportement
+suspect, répétitif ou critique.
+o Classification des alertes selon leur niveau de gravité simple anomalie, tentative répétée,
+tentative critique ou risque de fuite de données.
+o Conservation d'un historique des alertes pour faciliter les audits internes, les investigations et
+l'amélioration continue des règles de sécurité.
+• Conformité réglementaire :
+o Respect des exigences liées à la protection des données personnelles.
+o Gestion explicite du consentement pour les traitements analytiques avancés.
+o Documentation des finalités de traitement, des droits d'accès et des mécanismes de
+suppression ou d'anonymisation.
+o Respect des obligations internes liées à la confidentialité des données RH.
+
+4- Les défis de recherche et développement :
+4.1. Éthique et pertinence de l'IA :
+• Prévention des biais : s'assurer que les modèles de prédiction ne produisent pas de
+recommandations discriminatoires sur la base de critères personnels, sociaux ou organisationnels
+non pertinents.
+• Explicabilité : permettre aux équipes RH et aux managers de comprendre les raisons d'une alerte,
+d'un score de risque ou d'une recommandation, afin d'éviter une décision opaque ou entièrement
+automatisée.
+• Respect de l'humain : positionner l'IA comme un outil d'aide à la décision et non comme un
+mécanisme de surveillance ou de sanction. Les décisions sensibles devront rester sous
+responsabilité humaine.
+• Qualité des recommandations : vérifier que les plans d'action proposés sont réalistes,
+contextualisés et adaptés à la situation du collaborateur ou de l'équipe.
+• Encadrement de la supervision : garantir que l'analyse des comportements avec l'assistant IA
+reste limitée à des objectifs de sécurité, de conformité et d'amélioration du service, sans créer une
+surveillance excessive des collaborateurs.
+
+4.2. Adoption et conduite du changement :
+• Acceptation par les collaborateurs : concevoir une expérience rassurante montrant que l'outil
+améliore l'accès à l'information et l'accompagnement, sans remplacer le dialogue humain.
+
+YDAYS - Année universitaire 2025/2026
+
+6
+
+• Adoption par les équipes RH : intégrer la solution dans les pratiques existantes afin
+qu'elle réduise réellement la charge administrative au lieu d'ajouter un outil supplémentaire à gérer.
+• Confiance des managers : fournir des indicateurs simples, fiables et interprétables pour favoriser
+une utilisation responsable des alertes et des projections.
+• Formation des utilisateurs : prévoir des supports d'apprentissage, des guides pratiques et des cas
+d'usage concrets pour faciliter la prise en main de la plateforme.
+• Clarté sur les logs et alertes : informer les utilisateurs de manière transparente sur les types
+d'événements journalisés, les finalités de sécurité et les personnes autorisées à consulter les alertes.
+
+4.3. Développement technique et infrastructure :
+• Structuration des données RH : concevoir une base de données interne capable de regrouper les
+informations essentielles liées aux collaborateurs, absences, documents administratifs, enquêtes
+internes, indicateurs d'engagement et historiques de mobilité.
+• Qualité des données : mettre en place des règles de validation afin d'éviter les doublons, les
+données incomplètes, les erreurs de saisie et les incohérences entre les différents modules de la
+plateforme.
+• Évolution vers une intégration SIRH : prévoir une architecture ouverte permettant, dans une phase
+ultérieure, de connecter la plateforme à un SIRH existant sans modifier le cœur fonctionnel de la
+solution.
+• Architecture agentique : concevoir des agents IA spécialisés capables d'exécuter des tâches RH
+précises, comme générer un document, préparer un onboarding, vérifier un workflow d'offboarding ou
+produire une synthèse d'indicateurs.
+• Moteur de supervision IA : développer un module capable d'analyser les logs d'interaction avec
+l'assistant IA, de détecter les requêtes non autorisées et de déclencher des alertes selon des règles
+configurables.
+• Scalabilité : prévoir une infrastructure capable de supporter un grand nombre de collaborateurs, de
+requêtes conversationnelles, de traitements analytiques et d'événements de sécurité simultanés.
+• Performance : maintenir des temps de réponse rapides pour les usages quotidiens, notamment
+l'assistant RH, la consultation des KPI, la génération documentaire et le traitement des alertes.
+
+4.4. Sécurité et confidentialité des données :
+• Protection des informations RH : les données liées à la paie, aux absences, aux entretiens, à la
+santé au travail ou aux risques de départ doivent être traitées avec un niveau de sécurité élevé.
+• Gestion des accès sensibles : empêcher qu'un manager, un collaborateur ou un agent IA puisse
+accéder à des informations non autorisées.
+• Surveillance des usages de l'assistant IA : analyser les logs d'interaction afin d'identifier les
+comportements suspects, les tentatives de contournement des règles et les demandes répétées vers
+YDAYS - Année universitaire 2025/2026
+
+7
+
+des données non autorisées.
+• Gestion intelligente des alertes : définir des mécanismes de notification pour informer les
+administrateurs et les responsables RH lorsqu'un utilisateur tente d'accéder à des informations
+confidentielles en dehors de son périmètre d'autorisation.
+• Traçabilité : conserver un historique clair des consultations, modifications, générations de
+documents, alertes de sécurité et recommandations produites par la plateforme.
+• Anonymisation analytique : utiliser des données agrégées ou anonymisées lorsque les analyses
+ne nécessitent pas l'identification directe des collaborateurs.
+• Résilience face aux attaques IA : protéger le système contre les demandes visant à contourner les
+règles, extraire des données confidentielles ou manipuler les réponses de l'assistant.
+• Auditabilité : permettre aux profils autorisés de consulter l'historique des alertes, des décisions de
+blocage et des événements critiques afin de faciliter les audits internes.
+
+4.5. Expérience utilisateur et interface utilisateur :
+• Simplicité d'usage : proposer une interface claire pour permettre aux collaborateurs de poser leurs
+questions et aux RH de piloter les processus sans complexité technique.
+• Lisibilité des indicateurs : transformer des données RH complexes en visualisations
+compréhensibles: tendances, alertes, scores, graphiques d'évolution et cartes de priorisation.
+• Interface de supervision : prévoir un espace dédié aux administrateurs et responsables autorisés
+pour visualiser les alertes, filtrer les événements, consulter les logs importants et suivre les tentatives
+d'accès refusées.
+• Personnalisation : adapter l'expérience selon le rôle de l'utilisateur, son niveau d'autorisation et ses
+besoins quotidiens.
+• Accessibilité : respecter les bonnes pratiques d'accessibilité afin que la solution soit utilisable par le
+plus grand nombre.
+• Design orienté décision : organiser l'information pour aider l'utilisateur à comprendre rapidement la
+situation, les risques et les actions recommandées.
+
+4.6. Modèle économique et Go-to-Market
+• Étude de viabilité : analyser la possibilité de commercialiser la solution sous forme de licence
+annuelle ou d'abonnement SaaS indépendant, avec une option d'intégration aux systèmes RH
+existants dans les versions avancées.
+• Segmentation du marché : identifier les entreprises ayant une forte volumétrie RH, des processus
+administratifs lourds ou un besoin important de pilotage prédictif.
+• Différenciation : positionner la plateforme comme une solution combinant assistant RH, analytics
+prédictif, automatisation documentaire, agents IA de processus et supervision sécurisée des usages
+YDAYS - Année universitaire 2025/2026
+
+8
+
+de l'IA.
+• Optimisation des coûts IA : comparer les coûts entre l'utilisation d'APIs de modèles de langage et
+l'hébergement de modèles open-source spécialisés sur une infrastructure maîtrisée.
+• Déploiement progressif : prévoir une phase pilote sur un périmètre RH limité avant généralisation à
+l'ensemble de l'organisation.
+• Valorisation de la sécurité : mettre en avant la traçabilité, les alertes et le contrôle d'accès
+intelligent comme des éléments différenciants pour les entreprises sensibles à la conformité et à la
+protection des données RH.
+
+YDAYS - Année universitaire 2025/2026
+
+9
+
+

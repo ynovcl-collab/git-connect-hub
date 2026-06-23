@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { clearAllUserChats } from "@/lib/chat-storage";
 
 export type Role = "admin" | "rh" | "manager" | "collab" | "medecin";
 
@@ -32,6 +33,10 @@ export async function logout() {
     await supabase.auth.signOut();
   } catch {}
   if (typeof window !== "undefined") {
+    const user = getUser();
+    if (user) {
+      clearAllUserChats(user.id);
+    }
     localStorage.removeItem(KEY);
     window.dispatchEvent(new Event("wasl-auth"));
   }

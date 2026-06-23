@@ -20,7 +20,7 @@ function Qvt() {
     onSuccess: ({ inserted }) => { qc.invalidateQueries({ queryKey: ["qvt"] }); setToast(`${inserted} new risk alert(s)`); },
     onError: (e: any) => setToast(e?.message ?? "Failed"),
   });
-
+  
   const s = data;
 
   return (

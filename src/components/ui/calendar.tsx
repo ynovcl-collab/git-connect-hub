@@ -36,9 +36,9 @@ function Calendar({
         ...formatters,
       }}
       classNames={{
-        root: cn("w-fit", defaultClassNames.root),
+        root: cn("w-full overflow-hidden", defaultClassNames.root),
         months: cn("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
-        month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+        month: cn("flex w-full max-w-full flex-col gap-4", defaultClassNames.month),
         nav: cn(
           "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
           defaultClassNames.nav,

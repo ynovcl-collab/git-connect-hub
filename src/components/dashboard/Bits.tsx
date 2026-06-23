@@ -16,7 +16,7 @@ export function PageHeader({ kicker, title, subtitle, right }: { kicker?: string
 export function Stat({ label, value, delta, accent, icon }: { label: string; value: string; delta?: string; accent?: boolean; icon?: ReactNode }) {
   return (
     <div
-      className={`edunai-card p-3 relative overflow-hidden transition-transform duration-500 hover:-translate-y-0.5 ${accent ? "text-white" : ""}`}
+      className={`edunai-card p-3 relative overflow-hidden min-w-0 transition-transform duration-500 hover:-translate-y-0.5 ${accent ? "text-white" : ""}`}
       style={accent ? { background: "#0a0a12", borderColor: "transparent" } : {}}
     >
       {accent && <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />}
@@ -38,7 +38,7 @@ export function Stat({ label, value, delta, accent, icon }: { label: string; val
 
 export function Panel({ title, children, action, label }: { title: string; children: ReactNode; action?: ReactNode; label?: string }) {
   return (
-    <div className="edunai-card p-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="edunai-card p-4 min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="flex items-center justify-between mb-3 gap-2">
         <div>
           {label && <div className="bracket-tag !text-[9px] mb-1">{label}</div>}

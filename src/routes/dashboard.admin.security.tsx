@@ -43,14 +43,16 @@ function Security() {
   );
   const week = Date.now() - 7 * 86400000;
   const critical7d = alertRows.filter((a) => a.severity === "critical" && new Date(a.created_at).getTime() > week).length;
-  const flaggedAi = logs.filter((l) => l.action === "ai.chat.suspicious").length;
+  const flaggedAi = logs.filter((l) => l.action === "ai.chat.suspicious" || l.action === "ai.chat.blocked").length;
+  const aiChatEvents = logs.filter((l) => l.action?.startsWith("ai.chat")).length;
 
   return (
     <div className="space-y-6">
       <PageHeader kicker="Security" title="Threats, anomalies & audit" subtitle="Live signals from access controls and the AI behavior watcher." />
-      <div className="grid sm:grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-4 gap-4">
         <Stat label="Critical alerts (7d)" value={String(critical7d)} accent />
-        <Stat label="Flagged AI queries" value={String(flaggedAi)} delta="last 50 events" />
+        <Stat label="Flagged AI queries" value={String(flaggedAi)} delta="suspicious/blocked" />
+        <Stat label="AI chat events" value={String(aiChatEvents)} delta="last 50 events" />
         <Stat label="Audit events" value={String(logs.length)} delta="recent" />
       </div>
       <div className="grid lg:grid-cols-2 gap-5">

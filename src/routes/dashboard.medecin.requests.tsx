@@ -75,8 +75,14 @@ function Requests() {
             {editing === r.id ? (
               <div className="mt-2 space-y-2 bg-secondary/40 p-2 rounded-lg">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input type="date" value={when.slice(0,10)} onChange={(e) => setWhen(e.target.value + "T" + (when.slice(11) || "09:00"))} className="w-full min-w-0 rounded-md border border-border bg-background px-2 py-2 text-xs" />
-                  <input type="time" value={when.slice(11,16)} onChange={(e) => setWhen((when.slice(0,10) || new Date().toISOString().slice(0,10)) + "T" + e.target.value)} className="w-full min-w-0 rounded-md border border-border bg-background px-2 py-2 text-xs" />
+                  <div className="min-w-0">
+                    <label className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Date</label>
+                    <input type="date" value={when.slice(0,10)} onChange={(e) => setWhen(e.target.value + "T" + (when.slice(11) || "09:00"))} className="mt-1 w-full min-w-0 rounded-md border border-border bg-background px-2 py-2 text-xs appearance-none" />
+                  </div>
+                  <div className="min-w-0">
+                    <label className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Time</label>
+                    <input type="time" value={when.slice(11,16)} onChange={(e) => setWhen((when.slice(0,10) || new Date().toISOString().slice(0,10)) + "T" + e.target.value)} className="mt-1 w-full min-w-0 rounded-md border border-border bg-background px-2 py-2 text-xs appearance-none" />
+                  </div>
                 </div>
                 <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Private note for the employee…" rows={2} className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs" />
                 <div className="flex flex-wrap gap-1">

@@ -47,7 +47,7 @@ function CollabHome() {
 
       {/* Quick actions with tilt */}
       <div className="grid grid-cols-2 gap-2" style={{ perspective: 1200 }}>
-        {[
+          {[
           { i: MessageSquare, t: "AI assistant", d: "Policies · Payroll", to: "/dashboard/collab/assistant" },
           { i: FileText, t: "Documents", d: "Attestations · Forms", to: "/dashboard/collab/documents" },
           { i: Compass, t: "Onboarding", d: "30-day plan", to: "/dashboard/collab/onboarding" },

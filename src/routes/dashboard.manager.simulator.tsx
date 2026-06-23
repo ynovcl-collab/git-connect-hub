@@ -81,10 +81,8 @@ function exportCSV(s: Scenario, r: ReturnType<typeof project>) {
 }
 
 function exportPrintable(s: Scenario, r: ReturnType<typeof project>) {
-  const w = window.open("", "_blank", "width=900,height=1200");
-  if (!w) return;
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>WASL scenario</title>
-  <style>body{font:13px/1.5 system-ui,sans-serif;padding:24px;color:#0a0a12}h1{font-size:22px;margin:0 0 4px}h2{font-size:14px;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.18em;color:#666}table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid #ddd;padding:6px 8px;font-size:12px;text-align:left}.kpi{display:inline-block;margin:6px 16px 6px 0}.kpi b{display:block;font-size:18px}</style></head><body>
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>WASL scenario</title>
+  <style>body{font:13px/1.5 system-ui,sans-serif;padding:24px;color:#0a0a12}h1{font-size:22px;margin:0 0 4px}h2{font-size:14px;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.18em;color:#666}table{border-collapse:collapse;width:100%;margin-top:8px}td,th{border:1px solid #ddd;padding:6px 8px;font-size:12px;text-align:left}.kpi{display:inline-block;margin:6px 16px 6px 0}.kpi b{display:block;font-size:18px}.noprint{position:fixed;top:8px;right:8px}@media print{.noprint{display:none}}</style></head><body>
   <h1>WASL — What-if HR scenario</h1>
   <div style="color:#666">${new Date().toLocaleString()}</div>
   <h2>Inputs</h2>
@@ -97,15 +95,31 @@ function exportPrintable(s: Scenario, r: ReturnType<typeof project>) {
   <div class="kpi"><span>Training budget</span><b>${s.trainingBudgetPct}%</b></div>
   <h2>12-month projection</h2>
   <table><tr><th>Month</th><th>Headcount</th><th>Salary mass</th><th>Absence cost</th><th>Attrition</th><th>Engagement</th></tr>
-  ${r.months.map(m=>`<tr><td>${m.m}</td><td>${m.headcount}</td><td>${m.mass.toLocaleString()}</td><td>${m.absCost.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td>${m.attrition}</td><td>${m.engagement}</td></tr>`).join("")}
+  ${r.months.map(m => `<tr><td>${m.m}</td><td>${m.headcount}</td><td>${m.mass.toLocaleString()}</td><td>${m.absCost.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td>${m.attrition}</td><td>${m.engagement}</td></tr>`).join("")}
   </table>
   <h2>Summary</h2>
   <div class="kpi"><span>Total salary mass</span><b>${r.totalMass.toLocaleString(undefined,{maximumFractionDigits:0})} MAD</b></div>
   <div class="kpi"><span>Total absence cost</span><b>${r.totalAbsCost.toLocaleString(undefined,{maximumFractionDigits:0})} MAD</b></div>
   <div class="kpi"><span>Attrition</span><b>${r.totalAttrition}</b></div>
   <div class="kpi"><span>Est. replacement cost</span><b>${r.replacementCost.toLocaleString(undefined,{maximumFractionDigits:0})} MAD</b></div>
-  <script>window.print()</script></body></html>`);
-  w.document.close();
+  <div class="noprint"><button onclick="window.print()" style="padding:6px 10px;font:600 11px sans-serif;background:#0b1730;color:#fff;border:0;border-radius:6px;cursor:pointer">Print / Save PDF</button></div>
+  <script>setTimeout(()=>window.print(),350)</script></body></html>`;
+  try {
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, "_blank", "noopener,noreferrer,width=900,height=1100");
+    if (!w) {
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `wasl-whatif-${Date.now()}.html`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  } catch (e) {
+    console.error("exportPrintable failed", e);
+  }
 }
 
 function Slider({ label, value, min, max, step, unit, onChange }: { label: string; value: number; min: number; max: number; step: number; unit?: string; onChange: (n: number) => void }) {
