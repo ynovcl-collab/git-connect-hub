@@ -73,7 +73,7 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
   page.drawText("Authorised signature", { x: margin + 300, y, size: 10, font: helvetica, color: rgb(0.36, 0.40, 0.46) });
 
   const pdfBytes = await pdfDoc.save();
-  return new Blob([pdfBytes], { type: "application/pdf" });
+  return new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
 }
 
 export async function downloadPdf(opts: DocumentPdfProps) {
