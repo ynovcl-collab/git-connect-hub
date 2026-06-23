@@ -69,11 +69,12 @@ function AdminUsers() {
     <div className="space-y-5">
       <PageHeader kicker="Identity" title="Users & roles" subtitle="Provision, suspend and audit every account on the platform."
         right={<div className="flex gap-2">
-          <button onClick={() => setImportOpen(true)} className="pill-btn !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase">
-            <UploadCloud className="w-3.5 h-3.5" /> Import
+          <button onClick={downloadCsvTemplate} className="pill-btn !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase">
+            <UploadCloud className="w-3.5 h-3.5" /> CSV template
           </button>
           <button onClick={() => setInvite(true)} className="pill-btn accent !text-[10px] !py-1.5 !px-3 tracking-[0.2em] uppercase"><UserPlus className="w-3.5 h-3.5"/> Invite</button>
         </div>} />
+
 
       <div className="grid grid-cols-3 gap-2">
         <Stat label="Active" value={String(USERS.filter(u=>u.s==="active").length)} accent />
