@@ -121,7 +121,7 @@ function makeInlineStorage(body: string): string | null {
 }
 
 async function createDocumentFromAi(
-  adminClient: ReturnType<typeof createClient>,
+  adminClient: DbClient,
   userId: string,
   prompt: string,
   reply: string,
@@ -158,7 +158,7 @@ async function createDocumentFromAi(
 }
 
 async function createDocumentFromAiAsUser(
-  userClient: ReturnType<typeof createClient>,
+  userClient: DbClient,
   userId: string,
   prompt: string,
   reply: string,
@@ -252,7 +252,7 @@ export const Route = createFileRoute("/api/chat")({
         });
 
         const adminClient = createSupabaseAdminClient();
-        let userClient: ReturnType<typeof createClient> | null = null;
+        let userClient: DbClient | null = null;
 
         let userId: string | null = null;
         let userProfile: { full_name: string; position: string | null; department: string | null } | null = null;
