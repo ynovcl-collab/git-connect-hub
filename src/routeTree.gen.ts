@@ -24,6 +24,7 @@ import { Route as DashboardCollabIndexRouteImport } from './routes/dashboard.col
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard.admin.index'
 import { Route as DashboardRhWorkflowsRouteImport } from './routes/dashboard.rh.workflows'
 import { Route as DashboardRhProfileRouteImport } from './routes/dashboard.rh.profile'
+import { Route as DashboardRhPresenceRouteImport } from './routes/dashboard.rh.presence'
 import { Route as DashboardRhPeopleRouteImport } from './routes/dashboard.rh.people'
 import { Route as DashboardRhMedicalRouteImport } from './routes/dashboard.rh.medical'
 import { Route as DashboardRhKnowledgeRouteImport } from './routes/dashboard.rh.knowledge'
@@ -36,6 +37,7 @@ import { Route as DashboardManagerTeamRouteImport } from './routes/dashboard.man
 import { Route as DashboardManagerSimulatorRouteImport } from './routes/dashboard.manager.simulator'
 import { Route as DashboardManagerQvtRouteImport } from './routes/dashboard.manager.qvt'
 import { Route as DashboardManagerProfileRouteImport } from './routes/dashboard.manager.profile'
+import { Route as DashboardManagerPresenceRouteImport } from './routes/dashboard.manager.presence'
 import { Route as DashboardManagerLeaveRouteImport } from './routes/dashboard.manager.leave'
 import { Route as DashboardManagerInsightsRouteImport } from './routes/dashboard.manager.insights'
 import { Route as DashboardManagerAlertsRouteImport } from './routes/dashboard.manager.alerts'
@@ -52,6 +54,7 @@ import { Route as DashboardAdminSupervisionRouteImport } from './routes/dashboar
 import { Route as DashboardAdminSettingsRouteImport } from './routes/dashboard.admin.settings'
 import { Route as DashboardAdminSecurityRouteImport } from './routes/dashboard.admin.security'
 import { Route as DashboardAdminProfileRouteImport } from './routes/dashboard.admin.profile'
+import { Route as DashboardAdminPresenceRouteImport } from './routes/dashboard.admin.presence'
 import { Route as ApiPublicSeedDemoRouteImport } from './routes/api/public/seed-demo'
 
 const AuthRoute = AuthRouteImport.update({
@@ -129,6 +132,11 @@ const DashboardRhProfileRoute = DashboardRhProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardRhRoute,
 } as any)
+const DashboardRhPresenceRoute = DashboardRhPresenceRouteImport.update({
+  id: '/presence',
+  path: '/presence',
+  getParentRoute: () => DashboardRhRoute,
+} as any)
 const DashboardRhPeopleRoute = DashboardRhPeopleRouteImport.update({
   id: '/people',
   path: '/people',
@@ -192,6 +200,12 @@ const DashboardManagerProfileRoute = DashboardManagerProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardManagerRoute,
 } as any)
+const DashboardManagerPresenceRoute =
+  DashboardManagerPresenceRouteImport.update({
+    id: '/presence',
+    path: '/presence',
+    getParentRoute: () => DashboardManagerRoute,
+  } as any)
 const DashboardManagerLeaveRoute = DashboardManagerLeaveRouteImport.update({
   id: '/leave',
   path: '/leave',
@@ -278,6 +292,11 @@ const DashboardAdminProfileRoute = DashboardAdminProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashboardAdminRoute,
 } as any)
+const DashboardAdminPresenceRoute = DashboardAdminPresenceRouteImport.update({
+  id: '/presence',
+  path: '/presence',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 const ApiPublicSeedDemoRoute = ApiPublicSeedDemoRouteImport.update({
   id: '/api/public/seed-demo',
   path: '/api/public/seed-demo',
@@ -294,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/medecin': typeof DashboardMedecinRouteWithChildren
   '/dashboard/rh': typeof DashboardRhRouteWithChildren
   '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
+  '/dashboard/admin/presence': typeof DashboardAdminPresenceRoute
   '/dashboard/admin/profile': typeof DashboardAdminProfileRoute
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/admin/settings': typeof DashboardAdminSettingsRoute
@@ -310,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/manager/alerts': typeof DashboardManagerAlertsRoute
   '/dashboard/manager/insights': typeof DashboardManagerInsightsRoute
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
+  '/dashboard/manager/presence': typeof DashboardManagerPresenceRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
@@ -322,6 +343,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
   '/dashboard/rh/people': typeof DashboardRhPeopleRoute
+  '/dashboard/rh/presence': typeof DashboardRhPresenceRoute
   '/dashboard/rh/profile': typeof DashboardRhProfileRoute
   '/dashboard/rh/workflows': typeof DashboardRhWorkflowsRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -335,6 +357,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/api/chat': typeof ApiChatRoute
   '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
+  '/dashboard/admin/presence': typeof DashboardAdminPresenceRoute
   '/dashboard/admin/profile': typeof DashboardAdminProfileRoute
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/admin/settings': typeof DashboardAdminSettingsRoute
@@ -351,6 +374,7 @@ export interface FileRoutesByTo {
   '/dashboard/manager/alerts': typeof DashboardManagerAlertsRoute
   '/dashboard/manager/insights': typeof DashboardManagerInsightsRoute
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
+  '/dashboard/manager/presence': typeof DashboardManagerPresenceRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
@@ -363,6 +387,7 @@ export interface FileRoutesByTo {
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
   '/dashboard/rh/people': typeof DashboardRhPeopleRoute
+  '/dashboard/rh/presence': typeof DashboardRhPresenceRoute
   '/dashboard/rh/profile': typeof DashboardRhProfileRoute
   '/dashboard/rh/workflows': typeof DashboardRhWorkflowsRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
@@ -382,6 +407,7 @@ export interface FileRoutesById {
   '/dashboard/medecin': typeof DashboardMedecinRouteWithChildren
   '/dashboard/rh': typeof DashboardRhRouteWithChildren
   '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
+  '/dashboard/admin/presence': typeof DashboardAdminPresenceRoute
   '/dashboard/admin/profile': typeof DashboardAdminProfileRoute
   '/dashboard/admin/security': typeof DashboardAdminSecurityRoute
   '/dashboard/admin/settings': typeof DashboardAdminSettingsRoute
@@ -398,6 +424,7 @@ export interface FileRoutesById {
   '/dashboard/manager/alerts': typeof DashboardManagerAlertsRoute
   '/dashboard/manager/insights': typeof DashboardManagerInsightsRoute
   '/dashboard/manager/leave': typeof DashboardManagerLeaveRoute
+  '/dashboard/manager/presence': typeof DashboardManagerPresenceRoute
   '/dashboard/manager/profile': typeof DashboardManagerProfileRoute
   '/dashboard/manager/qvt': typeof DashboardManagerQvtRoute
   '/dashboard/manager/simulator': typeof DashboardManagerSimulatorRoute
@@ -410,6 +437,7 @@ export interface FileRoutesById {
   '/dashboard/rh/knowledge': typeof DashboardRhKnowledgeRoute
   '/dashboard/rh/medical': typeof DashboardRhMedicalRoute
   '/dashboard/rh/people': typeof DashboardRhPeopleRoute
+  '/dashboard/rh/presence': typeof DashboardRhPresenceRoute
   '/dashboard/rh/profile': typeof DashboardRhProfileRoute
   '/dashboard/rh/workflows': typeof DashboardRhWorkflowsRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -430,6 +458,7 @@ export interface FileRouteTypes {
     | '/dashboard/medecin'
     | '/dashboard/rh'
     | '/api/public/seed-demo'
+    | '/dashboard/admin/presence'
     | '/dashboard/admin/profile'
     | '/dashboard/admin/security'
     | '/dashboard/admin/settings'
@@ -446,6 +475,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/alerts'
     | '/dashboard/manager/insights'
     | '/dashboard/manager/leave'
+    | '/dashboard/manager/presence'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/simulator'
@@ -458,6 +488,7 @@ export interface FileRouteTypes {
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
     | '/dashboard/rh/people'
+    | '/dashboard/rh/presence'
     | '/dashboard/rh/profile'
     | '/dashboard/rh/workflows'
     | '/dashboard/admin/'
@@ -471,6 +502,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/api/chat'
     | '/api/public/seed-demo'
+    | '/dashboard/admin/presence'
     | '/dashboard/admin/profile'
     | '/dashboard/admin/security'
     | '/dashboard/admin/settings'
@@ -487,6 +519,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/alerts'
     | '/dashboard/manager/insights'
     | '/dashboard/manager/leave'
+    | '/dashboard/manager/presence'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/simulator'
@@ -499,6 +532,7 @@ export interface FileRouteTypes {
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
     | '/dashboard/rh/people'
+    | '/dashboard/rh/presence'
     | '/dashboard/rh/profile'
     | '/dashboard/rh/workflows'
     | '/dashboard/admin'
@@ -517,6 +551,7 @@ export interface FileRouteTypes {
     | '/dashboard/medecin'
     | '/dashboard/rh'
     | '/api/public/seed-demo'
+    | '/dashboard/admin/presence'
     | '/dashboard/admin/profile'
     | '/dashboard/admin/security'
     | '/dashboard/admin/settings'
@@ -533,6 +568,7 @@ export interface FileRouteTypes {
     | '/dashboard/manager/alerts'
     | '/dashboard/manager/insights'
     | '/dashboard/manager/leave'
+    | '/dashboard/manager/presence'
     | '/dashboard/manager/profile'
     | '/dashboard/manager/qvt'
     | '/dashboard/manager/simulator'
@@ -545,6 +581,7 @@ export interface FileRouteTypes {
     | '/dashboard/rh/knowledge'
     | '/dashboard/rh/medical'
     | '/dashboard/rh/people'
+    | '/dashboard/rh/presence'
     | '/dashboard/rh/profile'
     | '/dashboard/rh/workflows'
     | '/dashboard/admin/'
@@ -673,6 +710,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRhProfileRouteImport
       parentRoute: typeof DashboardRhRoute
     }
+    '/dashboard/rh/presence': {
+      id: '/dashboard/rh/presence'
+      path: '/presence'
+      fullPath: '/dashboard/rh/presence'
+      preLoaderRoute: typeof DashboardRhPresenceRouteImport
+      parentRoute: typeof DashboardRhRoute
+    }
     '/dashboard/rh/people': {
       id: '/dashboard/rh/people'
       path: '/people'
@@ -755,6 +799,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/dashboard/manager/profile'
       preLoaderRoute: typeof DashboardManagerProfileRouteImport
+      parentRoute: typeof DashboardManagerRoute
+    }
+    '/dashboard/manager/presence': {
+      id: '/dashboard/manager/presence'
+      path: '/presence'
+      fullPath: '/dashboard/manager/presence'
+      preLoaderRoute: typeof DashboardManagerPresenceRouteImport
       parentRoute: typeof DashboardManagerRoute
     }
     '/dashboard/manager/leave': {
@@ -869,6 +920,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAdminProfileRouteImport
       parentRoute: typeof DashboardAdminRoute
     }
+    '/dashboard/admin/presence': {
+      id: '/dashboard/admin/presence'
+      path: '/presence'
+      fullPath: '/dashboard/admin/presence'
+      preLoaderRoute: typeof DashboardAdminPresenceRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
     '/api/public/seed-demo': {
       id: '/api/public/seed-demo'
       path: '/api/public/seed-demo'
@@ -880,6 +938,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardAdminRouteChildren {
+  DashboardAdminPresenceRoute: typeof DashboardAdminPresenceRoute
   DashboardAdminProfileRoute: typeof DashboardAdminProfileRoute
   DashboardAdminSecurityRoute: typeof DashboardAdminSecurityRoute
   DashboardAdminSettingsRoute: typeof DashboardAdminSettingsRoute
@@ -889,6 +948,7 @@ interface DashboardAdminRouteChildren {
 }
 
 const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
+  DashboardAdminPresenceRoute: DashboardAdminPresenceRoute,
   DashboardAdminProfileRoute: DashboardAdminProfileRoute,
   DashboardAdminSecurityRoute: DashboardAdminSecurityRoute,
   DashboardAdminSettingsRoute: DashboardAdminSettingsRoute,
@@ -933,6 +993,7 @@ interface DashboardManagerRouteChildren {
   DashboardManagerAlertsRoute: typeof DashboardManagerAlertsRoute
   DashboardManagerInsightsRoute: typeof DashboardManagerInsightsRoute
   DashboardManagerLeaveRoute: typeof DashboardManagerLeaveRoute
+  DashboardManagerPresenceRoute: typeof DashboardManagerPresenceRoute
   DashboardManagerProfileRoute: typeof DashboardManagerProfileRoute
   DashboardManagerQvtRoute: typeof DashboardManagerQvtRoute
   DashboardManagerSimulatorRoute: typeof DashboardManagerSimulatorRoute
@@ -944,6 +1005,7 @@ const DashboardManagerRouteChildren: DashboardManagerRouteChildren = {
   DashboardManagerAlertsRoute: DashboardManagerAlertsRoute,
   DashboardManagerInsightsRoute: DashboardManagerInsightsRoute,
   DashboardManagerLeaveRoute: DashboardManagerLeaveRoute,
+  DashboardManagerPresenceRoute: DashboardManagerPresenceRoute,
   DashboardManagerProfileRoute: DashboardManagerProfileRoute,
   DashboardManagerQvtRoute: DashboardManagerQvtRoute,
   DashboardManagerSimulatorRoute: DashboardManagerSimulatorRoute,
@@ -978,6 +1040,7 @@ interface DashboardRhRouteChildren {
   DashboardRhKnowledgeRoute: typeof DashboardRhKnowledgeRoute
   DashboardRhMedicalRoute: typeof DashboardRhMedicalRoute
   DashboardRhPeopleRoute: typeof DashboardRhPeopleRoute
+  DashboardRhPresenceRoute: typeof DashboardRhPresenceRoute
   DashboardRhProfileRoute: typeof DashboardRhProfileRoute
   DashboardRhWorkflowsRoute: typeof DashboardRhWorkflowsRoute
   DashboardRhIndexRoute: typeof DashboardRhIndexRoute
@@ -988,6 +1051,7 @@ const DashboardRhRouteChildren: DashboardRhRouteChildren = {
   DashboardRhKnowledgeRoute: DashboardRhKnowledgeRoute,
   DashboardRhMedicalRoute: DashboardRhMedicalRoute,
   DashboardRhPeopleRoute: DashboardRhPeopleRoute,
+  DashboardRhPresenceRoute: DashboardRhPresenceRoute,
   DashboardRhProfileRoute: DashboardRhProfileRoute,
   DashboardRhWorkflowsRoute: DashboardRhWorkflowsRoute,
   DashboardRhIndexRoute: DashboardRhIndexRoute,
