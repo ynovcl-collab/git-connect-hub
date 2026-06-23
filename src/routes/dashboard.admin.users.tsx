@@ -65,6 +65,25 @@ function AdminUsers() {
     }
   }
 
+  function downloadCsvTemplate() {
+    const csvText =
+      "email,full_name,department,position,hire_date,role\n" +
+      "aya.bensaid@wasl.app,Aya Bensaid,Engineering,Frontend Engineer,2024-03-12,collab\n" +
+      "mehdi.ziani@wasl.app,Mehdi Ziani,Engineering,Backend Engineer,2024-05-02,collab\n" +
+      "sara.rafik@wasl.app,Sara Rafik,HR,HR Business Partner,2023-09-18,rh\n" +
+      "karim.naciri@wasl.app,Karim Naciri,Sales,Account Executive,2024-01-22,manager\n";
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "wasl-collaborators-template.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setToast("CSV template downloaded");
+  }
+
   return (
     <div className="space-y-5">
       <PageHeader kicker="Identity" title="Users & roles" subtitle="Provision, suspend and audit every account on the platform."
