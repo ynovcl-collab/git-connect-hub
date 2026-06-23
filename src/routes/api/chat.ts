@@ -478,7 +478,7 @@ export const Route = createFileRoute("/api/chat")({
               }
               if (adminClient ?? userClient) {
                 const alertClient = adminClient ?? userClient;
-                if (sensitiveTopic) {
+                if (sensitiveTopic && alertClient) {
                   if (adminClient) {
                     await adminClient.from("ai_escalations").insert({
                       user_id: userId,
@@ -491,25 +491,26 @@ export const Route = createFileRoute("/api/chat")({
                   await alertClient.from("alerts").insert({
                     title: `Sensitive AI request — ${sensitiveTopic.replace("_", " ")}`,
                     description: maskedPrompt,
-                    severity: sensitiveTopic === "mental_health" ? "high" : "medium",
+                    severity: sensitiveTopic === "mental_health" ? "critical" : "warning",
                     target_id: userId,
                   });
                 }
-                if (crossEmployeeProbe) {
+                if (alertClient && crossEmployeeProbe) {
                   await alertClient.from("alerts").insert({
                     title: "Cross-employee data probe",
                     description: maskedPrompt,
-                    severity: "medium",
+                    severity: "warning",
                     target_id: userId,
                   });
-                } else if (suspiciousOther) {
+                } else if (alertClient && suspiciousOther) {
                   await alertClient.from("alerts").insert({
                     title: "Suspicious AI assistant query",
                     description: maskedPrompt,
-                    severity: "medium",
+                    severity: "warning",
                     target_id: userId,
                   });
                 }
+
               }
             } catch (e) { console.error("audit log failed", e); }
             if (inDocumentFlow && adminClient && userId) {
