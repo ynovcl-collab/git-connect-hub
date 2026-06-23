@@ -234,7 +234,7 @@ export const importCollaborators = createServerFn({ method: "POST" })
             department: row.department || null,
             position: row.position || null,
             hire_date: row.hire_date || null,
-          }, { onConflict: ["id"] });
+          }, { onConflict: "id" });
         if (profileErr) {
           results.push({ email: row.email, status: `profile-error: ${profileErr.message}`, user_id: userIdToUse });
           continue;
