@@ -62,7 +62,7 @@ export async function createPdfBlob(opts: DocumentPdfProps): Promise<Blob> {
       page.drawText(lineText, { x: margin, y, size: textSize, font: helvetica, color: rgb(0.08, 0.1, 0.18) });
       y -= lineHeight;
       if (y < margin + 60) {
-        page.addPage();
+        page = pdfDoc.addPage([595.28, 841.89]);
         y = 820;
       }
     }
