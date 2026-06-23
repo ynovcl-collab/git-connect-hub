@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
 import { createAiGatewayProvider } from "@/lib/ai-gateway.server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+type DbClient = SupabaseClient<Database>;
+
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   collab: `You are Wasl, the AI HR assistant by Humanai for an employee (collaborator).
