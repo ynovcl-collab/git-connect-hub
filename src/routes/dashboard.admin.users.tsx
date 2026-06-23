@@ -155,9 +155,8 @@ function AdminUsers() {
         {sel && (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-2xl grid place-items-center text-white font-display font-bold text-2xl bg-[var(--grad-brand)]">
-                {sel.n.slice(0,1)}
-              </div>
+              <img src={avatarUrl(sel.n)} alt={sel.n} className="w-16 h-16 rounded-2xl bg-secondary object-cover" />
+
               <div>
                 <div className="font-display font-bold text-lg leading-tight">{sel.n}</div>
                 <div className="text-[10px] tracking-[0.2em] uppercase text-accent font-bold mt-1">{sel.r} · {sel.d}</div>
