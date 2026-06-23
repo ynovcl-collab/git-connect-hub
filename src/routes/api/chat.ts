@@ -55,10 +55,11 @@ const JAILBREAK_RE = /ignore (previous|all|the|prior)\s+(instructions|rules|prom
 const DOCUMENT_INTENT_RE = /\b(generate|create|draft|prepare|write|make|compose|produce)\b.*\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
 const DOCUMENT_INTENT_REVERSE = /\b(document|attestation|certificate|letter|contract|policy|request|statement|form)\b.*\b(generate|create|draft|prepare|write|make|compose|produce)\b|\b(leave request|remote[- ]work(?: request)?|internal transfer|salary certificate|loan attestation|attestation|certificate)\b/i;
 
-function classifyThreat(text: string): { level: "none" | "high" | "critical"; kind: string | null } {
+function classifyThreat(text: string): { level: "none" | "warning" | "critical"; kind: string | null } {
   if (HARMFUL_RE.test(text) || HARMFUL_FR.test(text)) return { level: "critical", kind: "harmful_content" };
-  if (JAILBREAK_RE.test(text)) return { level: "high", kind: "prompt_injection" };
+  if (JAILBREAK_RE.test(text)) return { level: "warning", kind: "prompt_injection" };
   return { level: "none", kind: null };
+
 }
 
 function isDocumentRequest(text: string): boolean {
