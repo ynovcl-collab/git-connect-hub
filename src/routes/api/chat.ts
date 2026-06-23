@@ -243,10 +243,10 @@ export const Route = createFileRoute("/api/chat")({
 
         const createSupabaseAdminClient = () => {
           if (!hasSupabaseAdmin) return null;
-          return createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
+          return createClient<Database>(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
         };
 
-        const createSupabaseUserClient = (token: string) => createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+        const createSupabaseUserClient = (token: string) => createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
           global: { headers: { Authorization: `Bearer ${token}` } },
           auth: { persistSession: false },
         });
@@ -520,7 +520,7 @@ export const Route = createFileRoute("/api/chat")({
               }
             } else if (inDocumentFlow && hasSupabaseUserAuth && authToken && userId) {
               try {
-                const userClient = createClient(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
+                const userClient = createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
                   global: { headers: { Authorization: `Bearer ${authToken}` } },
                   auth: { persistSession: false },
                 });
