@@ -18,9 +18,9 @@ export const Route = createFileRoute("/dashboard/collab/assistant")({
 
 const SUGGESTIONS: string[] = [
   "How many leave days do I have left?",
-  "What's the remote-work policy?",
+  "Request vacation from 2026-07-14 to 2026-07-18",
   "Create a salary certificate for me.",
-  "Who do I contact for internal mobility?",
+  "What's the remote-work policy?",
 ];
 
 function Assistant() {
