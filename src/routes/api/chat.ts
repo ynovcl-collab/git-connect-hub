@@ -174,9 +174,10 @@ async function createDocumentFromAiAsUser(
   userId: string,
   prompt: string,
   reply: string,
+  userName?: string | null,
 ) {
   const type = inferDocumentType(prompt);
-  const title = inferDocumentTitle(reply, prompt);
+  const title = inferDocumentTitle(reply, prompt, userName);
   const body = reply.trim();
   const storage_path = makeInlineStorage(body);
   const status = "pending" as const;
