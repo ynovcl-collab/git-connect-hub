@@ -109,7 +109,7 @@ function Supervision() {
     <div className="space-y-5">
       <PageHeader kicker="Governance" title="AI supervision" subtitle="Configure detection rules, review every AI-generated alert with its evidence, acknowledge or escalate. All actions are written to the immutable audit log." />
 
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <Stat label="Open alerts" value={String(open.length)} icon={<AlertTriangle className="w-3.5 h-3.5"/>} />
         <Stat label="Critical" value={String(critical)} accent={critical > 0} icon={<Shield className="w-3.5 h-3.5"/>} />
         <Stat label="Active rules" value={String(rules.filter(r => r.enabled).length)} icon={<Settings2 className="w-3.5 h-3.5"/>} />
