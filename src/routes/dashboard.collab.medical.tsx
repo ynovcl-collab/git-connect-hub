@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Stethoscope, Send, Loader2, Clock, CheckCircle2, Calendar } from "lucide-react";
 import { PageHeader, Panel } from "@/components/dashboard/Bits";
+import { DateField } from "@/components/DateField";
 import { createMedicalRequest, listMyMedicalRequests } from "@/lib/medical-requests.functions";
 
 export const Route = createFileRoute("/dashboard/collab/medical")({ component: MedicalRequest });
@@ -65,8 +66,7 @@ function MedicalRequest() {
           </div>
           <div>
             <div className="bracket-tag mb-2">PREFERRED DATE</div>
-            <input type="date" value={preferred} onChange={(e) => setPreferred(e.target.value)}
-              className="w-full rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-sm" />
+            <DateField value={preferred} onChange={setPreferred} placeholder="Pick a preferred date" />
           </div>
         </div>
         <button type="submit" disabled={sending || !topic.trim()} className="btn-primary w-full justify-center disabled:opacity-50">
