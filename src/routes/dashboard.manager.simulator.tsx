@@ -150,7 +150,7 @@ function Simulator() {
         </div>
       } />
 
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <Stat label="End headcount" value={String(r.endHeadcount)} delta={`Δ ${r.endHeadcount - s.headcount >= 0 ? "+" : ""}${r.endHeadcount - s.headcount}`} icon={<Activity className="w-3.5 h-3.5"/>} />
         <Stat label="Salary mass" value={`${(r.totalMass/1_000_000).toFixed(1)}M`} delta={`${massDelta >= 0 ? "+" : ""}${(massDelta/1_000_000).toFixed(1)}M vs base`} icon={massDelta >= 0 ? <TrendingUp className="w-3.5 h-3.5"/> : <TrendingDown className="w-3.5 h-3.5"/>} />
         <Stat label="Absence cost" value={`${(r.totalAbsCost/1_000).toFixed(0)}k`} icon={<TrendingDown className="w-3.5 h-3.5"/>} />
