@@ -9,7 +9,7 @@ function Insights() {
   return (
     <div className="space-y-6">
       <PageHeader kicker="Predictive" title="Team insights" subtitle="What the data says — and what to do next." />
-      <div className="grid sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <Stat label="Predicted turnover (90d)" value="6%" delta="↓ improving" accent />
         <Stat label="Absenteeism" value="3.2%" delta="stable" />
         <Stat label="Skills gap" value="Backend" delta="hire signal" />
