@@ -73,7 +73,7 @@ export function AppShell({ role }: { role: Role }) {
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [confirmOut, setConfirmOut] = useState(false);
   const [showTour, setShowTour] = useState(false);
-  const [notifs, setNotifs] = useState<Notif[]>(NOTIFS[role]);
+  const [notifs, setNotifs] = useState<Notif[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,7 +81,6 @@ export function AppShell({ role }: { role: Role }) {
     if (!u) { navigate({ to: "/auth" }); return; }
     if (u.role !== role) { navigate({ to: ROLE_META[u.role].path }); return; }
     setU(u);
-    setNotifs(NOTIFS[role]);
     if (!tourSeen(u.id)) setShowTour(true);
   }, [role, navigate]);
 
