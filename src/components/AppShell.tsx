@@ -177,6 +177,15 @@ export function AppShell({ role }: { role: Role }) {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {notifs.length === 0 && (
+                <div className="text-center py-10 px-4">
+                  <div className="w-12 h-12 rounded-2xl bg-secondary grid place-items-center mx-auto mb-3">
+                    <Bell className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <div className="font-bold text-sm">You're all caught up</div>
+                  <div className="text-xs text-muted-foreground mt-1">New activity will appear here in real time.</div>
+                </div>
+              )}
               {notifs.map(n => {
                 const Icon = KIND_ICON[n.kind];
                 return (
