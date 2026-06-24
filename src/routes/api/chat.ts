@@ -587,7 +587,7 @@ export const Route = createFileRoute("/api/chat")({
             } catch (e) { console.error("audit log failed", e); }
             if (inDocumentFlow && !leaveSubmitted && adminClient && userId) {
               try {
-                await createDocumentFromAi(adminClient, userId, lastUserText, text);
+                await createDocumentFromAi(adminClient, userId, lastUserText, text, userProfile?.full_name);
               } catch (e) {
                 console.error("AI document save failed", e);
               }
@@ -597,7 +597,7 @@ export const Route = createFileRoute("/api/chat")({
                   global: { headers: { Authorization: `Bearer ${authToken}` } },
                   auth: { persistSession: false },
                 });
-                await createDocumentFromAiAsUser(userClient, userId, lastUserText, text);
+                await createDocumentFromAiAsUser(userClient, userId, lastUserText, text, userProfile?.full_name);
               } catch (e) {
                 console.error("AI document save (user) failed", e);
               }
