@@ -122,7 +122,9 @@ function Assistant() {
                 >
                   {m.role === "assistant" ? (
                     <>
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>{text || (isLoading ? "…" : "")}</ReactMarkdown>
+                      <div className="md-chat">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{text || (isLoading ? "…" : "")}</ReactMarkdown>
+                      </div>
                       {documentData ? (
                         <button
                           type="button"
@@ -134,7 +136,7 @@ function Assistant() {
                       ) : null}
                     </>
                   ) : (
-                    text
+                    <div className="md-chat on-accent"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown></div>
                   )}
                 </div>
               </div>
