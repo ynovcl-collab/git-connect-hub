@@ -52,7 +52,7 @@ function Requests() {
     <div className="space-y-5">
       <PageHeader kicker="Consultation queue" title="Employee requests" subtitle="Live queue of consultation requests — updates in real time." />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         <div className="edunai-card p-3 text-center min-w-0"><div className="bracket-tag">PENDING</div><div className="font-display font-bold text-2xl mt-1">{pending.length}</div></div>
         <div className="edunai-card p-3 text-center min-w-0"><div className="bracket-tag">SCHEDULED</div><div className="font-display font-bold text-2xl mt-1">{scheduled.length}</div></div>
         <div className="edunai-card p-3 text-center min-w-0"><div className="bracket-tag">CLOSED</div><div className="font-display font-bold text-2xl mt-1">{closed.length}</div></div>
