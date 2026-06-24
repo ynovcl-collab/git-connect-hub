@@ -49,7 +49,7 @@ function Security() {
   return (
     <div className="space-y-6">
       <PageHeader kicker="Security" title="Threats, anomalies & audit" subtitle="Live signals from access controls and the AI behavior watcher." />
-      <div className="grid sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Stat label="Critical alerts (7d)" value={String(critical7d)} accent />
         <Stat label="Flagged AI queries" value={String(flaggedAi)} delta="suspicious/blocked" />
         <Stat label="AI chat events" value={String(aiChatEvents)} delta="last 50 events" />
