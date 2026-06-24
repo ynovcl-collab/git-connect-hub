@@ -136,7 +136,7 @@ function Assistant() {
                       ) : null}
                     </>
                   ) : (
-                    text
+                    <div className="md-chat on-accent"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown></div>
                   )}
                 </div>
               </div>
