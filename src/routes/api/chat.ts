@@ -136,12 +136,13 @@ async function createDocumentFromAi(
   userId: string,
   prompt: string,
   reply: string,
+  userName?: string | null,
 ) {
   const { data: isRH } = await adminClient.rpc("has_role", { _user_id: userId, _role: "rh" });
   const { data: isAdmin } = await adminClient.rpc("has_role", { _user_id: userId, _role: "admin" });
   const privileged = !!(isRH || isAdmin);
   const type = inferDocumentType(prompt);
-  const title = inferDocumentTitle(reply, prompt);
+  const title = inferDocumentTitle(reply, prompt, userName);
   const body = reply.trim();
   const storage_path = makeInlineStorage(body);
   const status = privileged ? "approved" as const : "pending" as const;
