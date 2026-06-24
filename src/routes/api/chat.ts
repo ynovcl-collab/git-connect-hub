@@ -386,6 +386,60 @@ export const Route = createFileRoute("/api/chat")({
           });
         }
 
+        // === Leave request intent (collab) ===
+        // Detect "take leave/off/vacation/sick from X to Y" and create an absences row.
+        let leaveSubmitted: null | { type: string; start: string; end: string } = null;
+        const leaveIntent = role === "collab" && /\b(leave|vacation|holiday|time off|day off|days off|cong[eé]s?|absence|sick|maladie|t[eé]l[eé]travail|remote work|wfh)\b/i.test(lastUserText)
+          && /\b(request|book|take|schedule|apply|need|want|would like|demande|prendre|poser|r[eé]server)\b/i.test(lastUserText);
+        function parseLeaveDates(t: string): { start: string; end: string } | null {
+          // ISO yyyy-mm-dd
+          const iso = t.match(/(\d{4}-\d{2}-\d{2})[^0-9]+(\d{4}-\d{2}-\d{2})/);
+          if (iso) return { start: iso[1], end: iso[2] };
+          // dd/mm or dd-mm[/yyyy]
+          const dm = t.match(/(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?\s*(?:to|until|—|-|au|jusqu.?au?|->)\s*(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?/i);
+          if (dm) {
+            const y = new Date().getFullYear();
+            const pad = (n: string) => n.padStart(2, "0");
+            const yr = (s?: string) => (s ? (s.length === 2 ? `20${s}` : s) : String(y));
+            return {
+              start: `${yr(dm[3])}-${pad(dm[2])}-${pad(dm[1])}`,
+              end: `${yr(dm[6])}-${pad(dm[5])}-${pad(dm[4])}`,
+            };
+          }
+          return null;
+        }
+        function inferLeaveType(t: string): "vacation" | "sick" | "remote" | "unpaid" | "training" {
+          if (/\b(sick|maladie|ill)\b/i.test(t)) return "sick";
+          if (/\b(remote|t[eé]l[eé]travail|wfh|work from home)\b/i.test(t)) return "remote";
+          if (/\b(unpaid|sans solde)\b/i.test(t)) return "unpaid";
+          if (/\b(training|formation)\b/i.test(t)) return "training";
+          return "vacation";
+        }
+        if (leaveIntent && userClient && userId) {
+          const dates = parseLeaveDates(lastUserText);
+          if (dates) {
+            try {
+              const type = inferLeaveType(lastUserText);
+              const reasonMatch = lastUserText.match(/\b(?:because|for|reason[:\s]+|car|parce que|pour)\s+([^.\n]{3,200})/i);
+              const { error } = await userClient.from("absences").insert({
+                employee_id: userId,
+                type,
+                status: "pending",
+                start_date: dates.start,
+                end_date: dates.end,
+                reason: reasonMatch?.[1]?.trim() ?? "Requested via AI assistant",
+              });
+              if (!error) {
+                leaveSubmitted = { type, start: dates.start, end: dates.end };
+                console.log("[leave] AI created absence:", leaveSubmitted);
+              } else {
+                console.error("[leave] insert error:", error.message);
+              }
+            } catch (e) { console.error("[leave] insert exception", e); }
+          }
+        }
+
+
         // KB + Enterprise documents retrieval (RAG)
         let kbContext = "";
         const citedTitles: string[] = [];
