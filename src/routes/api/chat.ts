@@ -97,23 +97,33 @@ function extractDocumentTitleFromReply(reply: string): string | null {
   return null;
 }
 
-function inferDocumentTitle(reply: string, prompt: string): string {
+function inferDocumentTitle(reply: string, prompt: string, userName?: string | null): string {
+  const dateStr = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
   const explicit = extractDocumentTitleFromReply(reply);
-  if (explicit) return explicit;
+  const cleanName = (userName ?? "").trim().split(/\s+/).slice(0, 3).join(" ");
 
-  const lines = reply.split("\n").map((l) => l.trim()).filter(Boolean);
-  const firstLine = lines[0] ?? "";
+  // Map common doc keywords to a polished kind label.
+  const kindFromPrompt = (() => {
+    const m = prompt.match(/\b(salary certificate|leave request|remote[- ]work(?:\s*request)?|internal transfer|loan attestation|end[- ]of[- ]contract|employment certificate|training certificate|attestation|certificate|contract|policy|letter|statement)\b/i);
+    if (!m) return null;
+    return m[0]
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  })();
 
-  const normalizedPrompt = prompt.replace(/\s+/g, " ").trim().toLowerCase();
-  const normalizedFirst = firstLine.replace(/\s+/g, " ").trim().toLowerCase();
-  if (normalizedFirst && normalizedFirst !== normalizedPrompt && normalizedFirst.length <= 120 && isLikelyDocumentHeading(firstLine)) {
-    return firstLine;
+  let base = explicit ?? kindFromPrompt;
+  if (!base) {
+    // Try first short heading line from the reply
+    const lines = reply.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lines[0] && lines[0].length <= 80 && isLikelyDocumentHeading(lines[0])) base = lines[0];
   }
+  if (!base) base = "HR Document";
 
-  const match = prompt.match(/\b(salary certificate|leave request|remote[- ]work( request)?|internal transfer|loan attestation|loan|contract|policy|letter|attestation|statement)\b/i);
-  if (match) return match[0].replace(/\b([a-z])/g, (m) => m.toUpperCase());
-
-  return "Generated HR document";
+  const parts = [base.trim()];
+  if (cleanName) parts.push(cleanName);
+  parts.push(dateStr);
+  return parts.join(" — ").slice(0, 140);
 }
 
 function makeInlineStorage(body: string): string | null {
