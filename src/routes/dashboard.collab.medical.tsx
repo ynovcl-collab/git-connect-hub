@@ -46,22 +46,27 @@ function MedicalRequest() {
           <textarea id="desc" placeholder=" " value={desc} onChange={(e) => setDesc(e.target.value)} rows={4} maxLength={2000} className="w-full" />
           <label htmlFor="desc">Describe what you're experiencing (optional)</label>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-3">
           <div>
-            <div className="bracket-tag mb-1">URGENCY</div>
-            <div className="flex gap-1">
-              {(["low","normal","high"] as const).map((u) => (
-                <button type="button" key={u} onClick={() => setUrgency(u)}
-                  className={`flex-1 text-[11px] uppercase tracking-wider py-2 rounded-lg border transition ${urgency===u ? "bg-foreground text-background border-foreground" : "border-border hover:bg-muted"}`}>
-                  {u}
-                </button>
-              ))}
+            <div className="bracket-tag mb-2">URGENCY</div>
+            <div className="grid grid-cols-3 gap-2">
+              {(["low","normal","high"] as const).map((u) => {
+                const isActive = urgency === u;
+                const tone = u === "high" ? "border-red-300 text-red-700" : u === "normal" ? "border-amber-300 text-amber-700" : "border-emerald-300 text-emerald-700";
+                return (
+                  <button type="button" key={u} onClick={() => setUrgency(u)}
+                    aria-pressed={isActive}
+                    className={`text-[11px] uppercase tracking-[0.15em] font-semibold py-2.5 rounded-xl border transition ${isActive ? "bg-foreground text-background border-foreground shadow-sm" : `bg-background ${tone} hover:bg-muted`}`}>
+                    {u}
+                  </button>
+                );
+              })}
             </div>
           </div>
           <div>
-            <div className="bracket-tag mb-1">PREFERRED DATE</div>
+            <div className="bracket-tag mb-2">PREFERRED DATE</div>
             <input type="date" value={preferred} onChange={(e) => setPreferred(e.target.value)}
-              className="w-full rounded-lg border border-border bg-secondary/40 px-3 py-2 text-sm" />
+              className="w-full rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-sm" />
           </div>
         </div>
         <button type="submit" disabled={sending || !topic.trim()} className="btn-primary w-full justify-center disabled:opacity-50">
