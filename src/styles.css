@@ -713,3 +713,52 @@
 .pill-btn:hover .arrow-circle { transform: rotate(-45deg); }
 .pill-btn.accent { background: var(--accent); color: white; border-color: var(--accent); }
 .pill-btn.accent:hover { background: var(--foreground); border-color: var(--foreground); }
+
+/* === Chat markdown styling === */
+.md-chat { font-size: .875rem; line-height: 1.55; }
+.md-chat > * + * { margin-top: .55rem; }
+.md-chat h1, .md-chat h2, .md-chat h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  color: var(--foreground);
+}
+.md-chat h1 { font-size: 1.125rem; margin-top: .6rem; }
+.md-chat h2 { font-size: 1.02rem; margin-top: .5rem; }
+.md-chat h3 { font-size: .94rem; margin-top: .4rem; }
+.md-chat p { margin: 0; }
+.md-chat strong { font-weight: 700; color: var(--foreground); }
+.md-chat em { font-style: italic; }
+.md-chat a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.md-chat ul, .md-chat ol { padding-left: 1.15rem; margin: .25rem 0; }
+.md-chat ul { list-style: disc; }
+.md-chat ol { list-style: decimal; }
+.md-chat li { margin: .15rem 0; }
+.md-chat li::marker { color: var(--accent); }
+.md-chat code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+  padding: .08rem .35rem; border-radius: 4px; font-size: .82em;
+}
+.md-chat pre {
+  background: color-mix(in oklab, var(--foreground) 92%, transparent);
+  color: var(--background);
+  padding: .65rem .8rem; border-radius: .65rem; overflow-x: auto;
+  font-size: .78rem; line-height: 1.5;
+}
+.md-chat pre code { background: transparent; padding: 0; color: inherit; }
+.md-chat blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: .7rem; color: var(--muted-foreground); font-style: italic;
+}
+.md-chat hr { border: 0; border-top: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent); margin: .8rem 0; }
+.md-chat table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.md-chat th, .md-chat td { border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent); padding: .35rem .55rem; text-align: left; }
+.md-chat th { background: color-mix(in oklab, var(--foreground) 8%, transparent); font-weight: 700; }
+
+/* User bubble keeps it readable on accent background */
+.md-chat.on-accent, .md-chat.on-accent * { color: white; }
+.md-chat.on-accent a { color: white; text-decoration: underline; }
+.md-chat.on-accent code { background: rgba(255,255,255,.18); color: white; }
+.md-chat.on-accent strong { color: white; }
