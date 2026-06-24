@@ -479,7 +479,12 @@ export const Route = createFileRoute("/api/chat")({
         const documentRule = inDocumentFlow
           ? "\n\nDOCUMENT GENERATION REQUEST DETECTED: Generate a complete, professional, formal document using the user profile data above and any details the user provided. Match the requested document type exactly (Salary Certificate, Leave Request, Remote-Work Request, Internal Transfer, Loan Attestation, etc.). Start the response with a one-line title heading. Fill in ALL fields (name, position, department, dates, period, reason, purpose, etc.). Format it professionally with proper spacing and sections. After the document text, add one line: \"[This document is now saved to your Documents section pending HR approval and available for PDF download from the chat.]\""
           : "";
-        const systemPrompt = (SYSTEM_PROMPTS[role] ?? SYSTEM_PROMPTS.collab) + profileCtx + kbContext + guard + citeRule + escalationRule + documentRule;
+        const leaveRule = leaveSubmitted
+          ? `\n\nLEAVE REQUEST SUBMITTED: A ${leaveSubmitted.type} request from ${leaveSubmitted.start} to ${leaveSubmitted.end} has been recorded and sent to the manager for approval. Confirm this clearly to the user, mention the type and dates, and tell them they can track it in the Leave section. Do NOT also generate a separate document.`
+          : (leaveIntent && role === "collab"
+              ? "\n\nLEAVE INTENT DETECTED but no clear dates were found. Ask the user for explicit start and end dates (YYYY-MM-DD or DD/MM/YYYY) and the type (vacation, sick, remote, unpaid, training) so the request can be created."
+              : "");
+        const systemPrompt = (SYSTEM_PROMPTS[role] ?? SYSTEM_PROMPTS.collab) + profileCtx + kbContext + guard + citeRule + escalationRule + documentRule + leaveRule;
 
         // Ensure we use the correct OpenRouter base URL (guard against legacy hosts)
         process.env.OPENROUTER_URL = process.env.OPENROUTER_URL ?? "https://openrouter.ai/api/v1";
