@@ -15,12 +15,13 @@ export const Route = createFileRoute("/auth")({
 });
 
 const ICONS = { admin: ShieldCheck, manager: Compass, collab: UserRound, rh: HeartHandshake, medecin: Stethoscope } as const;
+// Tones harmonized with the app's editorial navy palette (--accent ≈ deep navy)
 const ROLE_COLORS: Record<Role, string> = {
-  admin: "#0f172a",
-  manager: "#1e3a8a",
-  collab: "#0891b2",
-  rh: "#be185d",
-  medecin: "#15803d",
+  admin: "#1d1d1d",      // foreground — authority
+  manager: "#1e2747",    // accent navy
+  collab: "#3b4b7a",     // lighter navy
+  rh: "#5a3a55",         // muted wine — warm but on-brand
+  medecin: "#2f5b4a",    // deep teal-green — care/health
 };
 
 function initials(name: string): string {
