@@ -65,34 +65,6 @@ const NAV: Record<Role, { to: string; label: string; icon: React.ComponentType<{
 
 type Notif = { id: string; t: string; d: string; time: string; kind: "info" | "warn" | "ok"; read?: boolean };
 
-const NOTIFS: Record<Role, Notif[]> = {
-  collab: [
-    { id: "1", t: "Your attestation is ready", d: "Generated employment certificate (PDF).", time: "2m", kind: "ok" },
-    { id: "2", t: "Onboarding day 12 reminder", d: "Complete the data-privacy module by Friday.", time: "1h", kind: "info" },
-    { id: "3", t: "New policy published", d: "Remote work policy v2 — please review.", time: "Yesterday", kind: "info", read: true },
-  ],
-  manager: [
-    { id: "1", t: "Engagement dip detected", d: "Engineering · 3 collaborators showing weak signals.", time: "5m", kind: "warn" },
-    { id: "2", t: "Weekly team report", d: "Your Monday summary is available.", time: "1h", kind: "info" },
-    { id: "3", t: "Leave request approved", d: "Collab #5184 · 14–18 July.", time: "3h", kind: "ok", read: true },
-  ],
-  rh: [
-    { id: "1", t: "Onboarding stalled · M. Ziani", d: "Day-7 checkpoint missed. Suggest contact.", time: "8m", kind: "warn" },
-    { id: "2", t: "12 attestations to validate", d: "AI-prefilled queue awaiting your review.", time: "1h", kind: "info" },
-    { id: "3", t: "Offboarding closed · K. Naciri", d: "All compliance steps completed.", time: "Yesterday", kind: "ok", read: true },
-  ],
-  admin: [
-    { id: "1", t: "Unauthorized access attempt", d: "IP 41.x.x.x · blocked automatically.", time: "2m", kind: "warn" },
-    { id: "2", t: "Audit log exported", d: "By S. Bennani — security@wasl.app", time: "1h", kind: "info" },
-    { id: "3", t: "AI policy updated", d: "Guardrails v4 deployed to production.", time: "Yesterday", kind: "ok", read: true },
-  ],
-  medecin: [
-    { id: "1", t: "Burnout risk pattern detected", d: "Engineering · cross-signal absences + low engagement.", time: "10m", kind: "warn" },
-    { id: "2", t: "Sick-leave certificate to review", d: "Awaiting medical validation.", time: "1h", kind: "info" },
-    { id: "3", t: "Confidentiality reminder", d: "All medical data is end-to-end encrypted.", time: "Yesterday", kind: "ok", read: true },
-  ],
-};
-
 const KIND_ICON = { info: Info, warn: AlertTriangle, ok: CheckCircle2 };
 const KIND_COLOR = { info: "var(--accent)", warn: "#dc2626", ok: "#16a34a" };
 
@@ -101,7 +73,7 @@ export function AppShell({ role }: { role: Role }) {
   const [notifsOpen, setNotifsOpen] = useState(false);
   const [confirmOut, setConfirmOut] = useState(false);
   const [showTour, setShowTour] = useState(false);
-  const [notifs, setNotifs] = useState<Notif[]>(NOTIFS[role]);
+  const [notifs, setNotifs] = useState<Notif[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -109,7 +81,6 @@ export function AppShell({ role }: { role: Role }) {
     if (!u) { navigate({ to: "/auth" }); return; }
     if (u.role !== role) { navigate({ to: ROLE_META[u.role].path }); return; }
     setU(u);
-    setNotifs(NOTIFS[role]);
     if (!tourSeen(u.id)) setShowTour(true);
   }, [role, navigate]);
 
@@ -206,6 +177,15 @@ export function AppShell({ role }: { role: Role }) {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {notifs.length === 0 && (
+                <div className="text-center py-10 px-4">
+                  <div className="w-12 h-12 rounded-2xl bg-secondary grid place-items-center mx-auto mb-3">
+                    <Bell className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <div className="font-bold text-sm">You're all caught up</div>
+                  <div className="text-xs text-muted-foreground mt-1">New activity will appear here in real time.</div>
+                </div>
+              )}
               {notifs.map(n => {
                 const Icon = KIND_ICON[n.kind];
                 return (

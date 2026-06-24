@@ -69,7 +69,7 @@ function MedecinHome() {
     <div className="space-y-5">
       <PageHeader kicker="Occupational health" title="Well-being dashboard" subtitle="Confidential cross-signals to detect burnout & sick-leave patterns — anonymised at the team level." />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <Stat icon={Heart} label="Sick days (90d)" value={data?.sickDays ?? 0} tone="warn" />
         <Stat icon={Activity} label="Avg engagement" value={`${data?.avgEngagement ?? 0}/100`} tone={(data?.avgEngagement ?? 0) < 60 ? "danger" : "good"} />
         <Stat icon={Flame} label="Burnout candidates" value={data?.burnoutCandidates ?? 0} tone="danger" sub="≥3 absences + low pulse" />
