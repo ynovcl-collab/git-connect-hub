@@ -573,13 +573,13 @@ export const Route = createFileRoute("/api/chat")({
 
               }
             } catch (e) { console.error("audit log failed", e); }
-            if (inDocumentFlow && adminClient && userId) {
+            if (inDocumentFlow && !leaveSubmitted && adminClient && userId) {
               try {
                 await createDocumentFromAi(adminClient, userId, lastUserText, text);
               } catch (e) {
                 console.error("AI document save failed", e);
               }
-            } else if (inDocumentFlow && hasSupabaseUserAuth && authToken && userId) {
+            } else if (inDocumentFlow && !leaveSubmitted && hasSupabaseUserAuth && authToken && userId) {
               try {
                 const userClient = createClient<Database>(SUPABASE_URL!, SUPABASE_PUBLISHABLE_KEY!, {
                   global: { headers: { Authorization: `Bearer ${authToken}` } },
