@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Stethoscope, Calendar, CheckCircle2, Clock, X, Loader2 } from "lucide-react";
 import { PageHeader, Panel } from "@/components/dashboard/Bits";
+import { DateField } from "@/components/DateField";
 import { listAllMedicalRequests, updateMedicalRequest } from "@/lib/medical-requests.functions";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -77,7 +78,7 @@ function Requests() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="min-w-0">
                     <label className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Date</label>
-                    <input type="date" value={when.slice(0,10)} onChange={(e) => setWhen(e.target.value + "T" + (when.slice(11) || "09:00"))} className="mt-1 w-full min-w-0 rounded-md border border-border bg-background px-2 py-2 text-xs appearance-none" />
+                    <div className="mt-1"><DateField value={when.slice(0,10)} onChange={(v) => setWhen(v + "T" + (when.slice(11) || "09:00"))} placeholder="Pick a date" /></div>
                   </div>
                   <div className="min-w-0">
                     <label className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Time</label>

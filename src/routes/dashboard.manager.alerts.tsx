@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PageHeader } from "@/components/dashboard/Bits";
 import { Modal, Toast } from "@/components/Modal";
 import { Bell, Heart, Calendar, CheckCircle2 } from "lucide-react";
+import { DateField } from "@/components/DateField";
 
 export const Route = createFileRoute("/dashboard/manager/alerts")({
   component: Alerts,
@@ -93,10 +94,10 @@ function Alerts() {
                 ))}
               </div>
             </div>
-            <div className="field"><div className="relative">
-              <input id="p-date" type="date" placeholder=" " value={date} onChange={e=>setDate(e.target.value)} required />
-              <label htmlFor="p-date">Target date</label>
-            </div></div>
+            <div>
+              <div className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground mb-2 font-bold">Target date</div>
+              <DateField value={date} onChange={setDate} placeholder="Pick a target date" />
+            </div>
             <div className="field"><div className="relative">
               <textarea id="p-note" rows={3} placeholder=" " value={note} onChange={e=>setNote(e.target.value)} className="resize-none" />
               <label htmlFor="p-note">Notes</label>
