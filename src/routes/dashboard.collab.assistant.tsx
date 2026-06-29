@@ -27,6 +27,7 @@ function Assistant() {
   const [input, setInput] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status, error, setMessages } = useChat({
