@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/dashboard/Bits";
-import { Send, Wand2, Loader2, Download, Plus } from "lucide-react";
+import { Send, Wand2, Loader2, Download, Plus, Copy, Check } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
