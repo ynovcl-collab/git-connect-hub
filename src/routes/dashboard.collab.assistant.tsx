@@ -126,15 +126,34 @@ function Assistant() {
                       <div className="md-chat">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{text || (isLoading ? "…" : "")}</ReactMarkdown>
                       </div>
-                      {documentData ? (
-                        <button
-                          type="button"
-                          onClick={() => openPrintablePdf(documentData)}
-                          className="mt-3 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground hover:bg-secondary"
-                        >
-                          <Download className="w-3.5 h-3.5" /> Download PDF
-                        </button>
-                      ) : null}
+                      <div className="mt-3 flex items-center gap-2">
+                        {documentData ? (
+                          <button
+                            type="button"
+                            onClick={() => openPrintablePdf(documentData)}
+                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-medium text-foreground hover:bg-secondary"
+                          >
+                            <Download className="w-3.5 h-3.5" /> Download PDF
+                          </button>
+                        ) : null}
+                        {text.trim() ? (
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              try {
+                                await navigator.clipboard.writeText(text);
+                                setCopiedId(m.id);
+                                setTimeout(() => setCopiedId((id) => (id === m.id ? null : id)), 1400);
+                              } catch {}
+                            }}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-secondary"
+                            aria-label="Copy message"
+                          >
+                            {copiedId === m.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                            {copiedId === m.id ? "Copied" : "Copy"}
+                          </button>
+                        ) : null}
+                      </div>
                     </>
                   ) : (
                     <div className="md-chat on-accent"><ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown></div>
